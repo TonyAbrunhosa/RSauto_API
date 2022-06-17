@@ -43,6 +43,7 @@ namespace RSauto.Infrastructure.Repositories.Cadastros
 
                         transaction.Commit();
 
+
                         return true;
                     }
                     catch (Exception)
