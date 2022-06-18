@@ -9,14 +9,15 @@ namespace RSauto.Domain.Entities
         [Key]
         public int ID_PRECO_PECA { get; set; }
         public int ID_MARCA_PECAS { get; set; }
-        public int ID_MARCA { get; set; }
-        public int ID_PECA { get; set; }
-        public int ID_HIST_PRECO { get; set; }
-        public int QTDE_ESTOQUE { get; set; }
+        public int ID_MODELO { get; set; }
+        public int ID_PECA { get; set; }        
         public bool STATUS { get; set; }
+        public string CODIGO_PECA { get; set; }
         [Write(false)]
         public HistoricoPrecosPecasEntity HistoricoPrecosPecas { get; set; }
         [Write(false)]
-        public List<ListaAnoModeloPrecoEntity> ListaAnoModeloPreco { get; set; }        
+        public List<ListaAnoModeloPrecoEntity> ListaAnoModeloPreco { get; set; }
+        [Write(false)]
+        public EstoquePecasEntity EstoquePecas { get; set; }
     }
 }

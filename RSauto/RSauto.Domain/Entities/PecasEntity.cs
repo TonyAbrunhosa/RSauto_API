@@ -7,7 +7,6 @@ namespace RSauto.Domain.Entities
     {
         [Key]
         public int ID_PECA { get; set; }
-        public string DESCRICAO { get; set; }
-        public string CODIGO { get; set; }
+        public string DESCRICAO { get; set; }        
     }
 }

@@ -11,5 +11,6 @@ namespace RSauto.Domain.Entities
         public decimal PRECO { get; set; }
         public decimal CUSTO { get; set; }
         public DateTime ULTIMO_PRECO { get; set; }
+        public int ID_PRECO_PECA { get; set; }
     }
 }
