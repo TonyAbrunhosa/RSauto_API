@@ -2,9 +2,9 @@
 using RSauto.Application.Services;
 using RSauto.Application.Services.Cadastros;
 using RSauto.Domain.Contracts.Repositories;
-using RSauto.Domain.Contracts.Repositories.Cadastros;
+using RSauto.Domain.Contracts.Repositories.Registers;
 using RSauto.Domain.Contracts.Services;
-using RSauto.Domain.Contracts.Services.Cadastros;
+using RSauto.Domain.Contracts.Services.Registers;
 using RSauto.Infrastructure.Repositories;
 using RSauto.Infrastructure.Repositories.Cadastros;
 using RSauto.Shared.Communication;

@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RSauto.Application.Services.Cadastros;
-using RSauto.Domain.Contracts.Repositories.Cadastros;
-using RSauto.Domain.Contracts.Services.Cadastros;
+using RSauto.Domain.Contracts.Repositories.Registers;
+using RSauto.Domain.Contracts.Services.Registers;
 using RSauto.Domain.Entities.Cadastro.AnoModeloVeiculo;
 using RSauto.Domain.Entities.Cadastro.MarcasPecas;
 using RSauto.Domain.Entities.Cadastro.MarcasVeiculos;
 using RSauto.Domain.Entities.Cadastro.ModelosVeiculos;
 using RSauto.Infrastructure.Repositories.Cadastros;
+using RSauto.Infrastructure.Repositories.Registers;
 
 namespace RSauto.API.Configurations
 {
@@ -25,13 +26,10 @@ namespace RSauto.API.Configurations
             services.AddTransient<IModelosVeiculosQueryService, ModelosVeiculosQueryService>();
 
             //REPOSITORY
-            services.AddTransient<IAnoModeloVeiculoRepository, AnoModeloVeiculoRepository>();
+            services.AddTransient<IBaseCrudRepository, BaseCrudRepository>();
             services.AddTransient<IAnoModeloVeiculoQueryRepository, AnoModeloVeiculoQueryRepository>();
-            services.AddTransient<IMarcasPecasRepository, MarcasPecasRepository>();
             services.AddTransient<IMarcasPecasQueryRepository, MarcasPecasQueryRepository>();
-            services.AddTransient<IMarcasVeiculosRepository, MarcasVeiculosRepository>();
             services.AddTransient<IMarcasVeiculosQueryRepository, MarcasVeiculosQueryRepository>();
-            services.AddTransient<IModelosVeiculosRepository, ModelosVeiculosRepository>();
             services.AddTransient<IModelosVeiculosQueryRepository, ModelosVeiculosQueryRepository>();
 
             //VALIDATE
