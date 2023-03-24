@@ -1,12 +1,4 @@
-﻿{
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:22865",
-      "sslPort": 44333
-    }
-  },
+{
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
@@ -17,13 +9,28 @@
     },
     "RSauto.API": {
       "commandName": "Project",
-      "dotnetRunMessages": "true",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:6501;http://localhost:6500",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "https://localhost:6501;http://localhost:6500"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true,
+      "useSSL": true
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:22865",
+      "sslPort": 44333
     }
   }
 }

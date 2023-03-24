@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>f9e4d615-eabd-4796-b5de-5b0d940997d4</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,6 +11,7 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.3.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.1" />

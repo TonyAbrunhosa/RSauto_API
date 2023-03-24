@@ -22,7 +22,7 @@ namespace RSauto.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("Web")]
+        [HttpPost("Web")]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
