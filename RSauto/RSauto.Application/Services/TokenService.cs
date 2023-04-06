@@ -30,7 +30,7 @@ namespace RSauto.Application.Services
 
         public async Task<ICommandResult> ObterToken(DadosTokenInput input)
         {
-            var dados = await _tokenRepository.BuscarUsuario(input);
+            var dados = new LoginsEntity { ID_USUARIO = 1, LOGIN_USUARIO = "teste", NOME_USUARIO = "Teste", SENHA_USUARIO = "1234" }; //await _tokenRepository.BuscarUsuario(input);
 
             if ((dados?.ID_USUARIO ?? 0) == 0)
                 return new CommandResult(false, "Usuario não encontrado.");

@@ -5,8 +5,6 @@ using RSauto.Domain.Contracts.Command;
 using RSauto.Domain.Contracts.Services.Registers;
 using RSauto.Domain.Entities;
 using RSauto.Domain.Entities.Cadastro.ModelosVeiculos.input;
-using RSauto.Domain.Entities.Command;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,28 +24,21 @@ namespace RSauto.API.Controllers.Registers
             _modelosVeiculosQueryService = modelosVeiculosQueryService;
         }
 
-        [HttpPost("Insert")]
+        [HttpPost("Create")]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Insert([FromBody] ModelosVeiculosInput input)
         {
-            try
-            {
-                ICommandResult retorno = await _modelosVeiculosService.Insert(input);
+            ICommandResult retorno = await _modelosVeiculosService.Insert(input);
 
-                if (retorno.Sucesso)
-                    return Ok(retorno);
-                else if (!retorno.Sucesso && retorno.Dados != null)
-                    return UnprocessableEntity(retorno);
-                else
-                    return BadRequest(retorno);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResult(false, ex.Message + ex.StackTrace));
-            }
+            if (retorno.Sucesso)
+                return Ok(retorno);
+            else if (!retorno.Sucesso && retorno.Dados != null)
+                return UnprocessableEntity(retorno);
+            else
+                return BadRequest(retorno);
         }
 
         [HttpPut("Update/{id:int}")]
@@ -57,45 +48,31 @@ namespace RSauto.API.Controllers.Registers
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Atualizar([FromBody] ModelosVeiculosInput input, int id)
         {
-            try
-            {
-                ICommandResult retorno = await _modelosVeiculosService.Update(id, input);
+            ICommandResult retorno = await _modelosVeiculosService.Update(id, input);
 
-                if (retorno.Sucesso)
-                    return Ok(retorno);
-                else if (!retorno.Sucesso && retorno.Dados != null)
-                    return UnprocessableEntity(retorno);
-                else
-                    return BadRequest(retorno);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResult(false, ex.Message + ex.StackTrace));
-            }
+            if (retorno.Sucesso)
+                return Ok(retorno);
+            else if (!retorno.Sucesso && retorno.Dados != null)
+                return UnprocessableEntity(retorno);
+            else
+                return BadRequest(retorno);
         }
 
-        [HttpDelete("Remove/{id:int}")]
+        [HttpDelete("Delete/{id:int}")]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Remove(int id)
         {
-            try
-            {
-                ICommandResult retorno = await _modelosVeiculosService.Remove(id);
+            ICommandResult retorno = await _modelosVeiculosService.Remove(id);
 
-                if (retorno.Sucesso)
-                    return Ok(retorno);
-                else if (!retorno.Sucesso && retorno.Dados != null)
-                    return UnprocessableEntity(retorno);
-                else
-                    return BadRequest(retorno);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResult(false, ex.Message + ex.StackTrace));
-            }
+            if (retorno.Sucesso)
+                return Ok(retorno);
+            else if (!retorno.Sucesso && retorno.Dados != null)
+                return UnprocessableEntity(retorno);
+            else
+                return BadRequest(retorno);
         }
 
         [HttpGet("Listar")]
@@ -105,21 +82,14 @@ namespace RSauto.API.Controllers.Registers
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Listar()
         {
-            try
-            {
-                ICommandResult retorno = await _modelosVeiculosQueryService.Listar();
-
-                if (retorno.Sucesso)
-                    return Ok(retorno);
-                else if (!retorno.Sucesso && retorno.Dados != null)
-                    return UnprocessableEntity(retorno);
-                else
-                    return BadRequest(retorno);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResult(false, ex.Message + ex.StackTrace));
-            }
+            ICommandResult retorno = await _modelosVeiculosQueryService.Listar();
+            
+            if (retorno.Sucesso)
+                return Ok(retorno);
+            else if (!retorno.Sucesso && retorno.Dados != null)
+                return UnprocessableEntity(retorno);
+            else
+                return BadRequest(retorno);
         }
     }
 }

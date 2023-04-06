@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using RSauto.API.Configurations;
+using RSauto.API.Middlewares;
 
 namespace RSauto.API
 {
@@ -19,7 +20,7 @@ namespace RSauto.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.ResolveDependencyInjection();
-            services.ResolveCors();
+            services.ResolveCors();            
             services.AddAuthenticationBearer();
             services.AddSwagger("RSauto.Api", "v1");
             services.AddCompression();
@@ -43,6 +44,7 @@ namespace RSauto.API
             app.UseHttpsRedirection();            
             app.UseResponseCompression();
             app.UseAuthorization();
+            app.UseBaseMiddleware();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

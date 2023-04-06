@@ -9,10 +9,8 @@ using System;
 using System.Threading.Tasks;
 
 namespace RSauto.API.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TokenController : Controller
+{    
+    public class TokenController : BaseApiController
     {
         private readonly ITokenService _service;
 
@@ -29,21 +27,14 @@ namespace RSauto.API.Controllers
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ObterToken([FromBody] DadosTokenInput input)
         {
-            try
-            {
-                ICommandResult retorno = await _service.ObterToken(input);
+            ICommandResult retorno = await _service.ObterToken(input);
 
-                if (retorno.Sucesso)
-                    return Ok(retorno);
-                else if(!retorno.Sucesso && retorno.Dados != null)
-                    return UnprocessableEntity(retorno);
-                else
-                    return BadRequest(retorno);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new CommandResult(false, ex.Message));
-            }
+            if (retorno.Sucesso)
+                return Ok(retorno);
+            else if (!retorno.Sucesso && retorno.Dados != null)
+                return UnprocessableEntity(retorno);
+            else
+                return BadRequest(retorno);
         }
     }
 }

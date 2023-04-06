@@ -4,9 +4,7 @@ using System;
 
 namespace RSauto.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class StatusController : Controller
+    public class StatusController : BaseApiController
     {
         [HttpGet]
         [AllowAnonymous]
