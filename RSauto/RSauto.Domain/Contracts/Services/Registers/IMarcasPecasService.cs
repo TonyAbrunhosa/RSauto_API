@@ -6,8 +6,8 @@ namespace RSauto.Domain.Contracts.Services.Registers
 {
     public interface IMarcasPecasService
     {
-        Task<ICommandResult> Insert(string nome);
+        Task<ICommandResult> Create(string name);
         Task<ICommandResult> Update(MarcasPecasEntity entity);
-        Task<ICommandResult> Remove(int id);
+        Task<ICommandResult> Listar();
     }
 }

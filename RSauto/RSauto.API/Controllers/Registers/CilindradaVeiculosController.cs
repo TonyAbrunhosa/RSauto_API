@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RSauto.API.Controllers.Registers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
     public class CilindradaVeiculosController : BaseApiController
     {
         private readonly ICilindradaVeiculosService _service;
@@ -24,9 +24,9 @@ namespace RSauto.API.Controllers.Registers
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Insert([FromBody] string nome)
+        public async Task<IActionResult> Create([FromBody] string nome)
         {
-            ICommandResult retorno = await _service.Insert(nome);
+            ICommandResult retorno = await _service.Create(nome);
 
             if (retorno.Sucesso)
                 return Ok(retorno);

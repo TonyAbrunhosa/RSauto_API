@@ -7,28 +7,28 @@ using System.Threading.Tasks;
 
 namespace RSauto.Infrastructure.Repositories.Registers
 {
-    public class MarcasVeiculosQueryRepository : IMarcasVeiculosQueryRepository
+    public class ModelosVeiculosRepository : IModelosVeiculosRepository
     {
         private readonly SqlCommunication _sql;
 
-        public MarcasVeiculosQueryRepository(SqlCommunication sql)
+        public ModelosVeiculosRepository(SqlCommunication sql)
         {
             _sql = sql;
         }
 
-        public async Task<IEnumerable<MarcasVeiculosEntity>> Listar()
+        public async Task<IEnumerable<ModelosVeiculosEntity>> Listar()
         {
-            return await _sql.QueryAsyncDapper<MarcasVeiculosEntity>(@"BEGIN SELECT ID_MARCA, NOME FROM MARCAS_VEICULOS END");
+            return await _sql.QueryAsyncDapper<ModelosVeiculosEntity>(@"BEGIN SELECT ID_MODELO, NOME, ID_MARCA FROM MODELOS_VEICULOS END");
         }
 
-        public async Task<bool> PossuiMarcaVeiculo(string nome, int id = 0)
+        public async Task<bool> PossuiModeloVeiculo(string nome, int id = 0)
         {
-            return ((await _sql.QueryAsyncDapper<MarcasVeiculosEntity>(@"
+            return ((await _sql.QueryAsyncDapper<ModelosVeiculosEntity>(@"
                 BEGIN 
                     SELECT 
                         TOP 1 
-                        ID_MARCA 
-                    FROM MARCAS_VEICULOS 
+                        ID_MODELO 
+                    FROM MODELOS_VEICULOS 
                     WHERE NOME = @nome 
                     AND (@id = 0 OR ID_MARCA != @id)
                 END", new { nome = nome, id = id }))?.Count() ?? 0) > 0;

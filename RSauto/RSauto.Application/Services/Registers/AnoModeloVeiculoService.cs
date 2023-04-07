@@ -12,11 +12,11 @@ namespace RSauto.Application.Services.Cadastros
     public class AnoModeloVeiculoService : IAnoModeloVeiculoService
     {
         private readonly IBaseCrudRepository _baseCrudRepository;
-        private readonly IAnoModeloVeiculoQueryRepository _anoModeloVeiculoQueryRepository;
+        private readonly IAnoModeloVeiculoRepository _anoModeloVeiculoQueryRepository;
         private readonly AnoModeloVeiculoNewValidate _validateNew;
         private readonly AnoModeloVeiculoEditValidate _validateEdit;
 
-        public AnoModeloVeiculoService(IAnoModeloVeiculoQueryRepository anoModeloVeiculoQueryRepository, AnoModeloVeiculoNewValidate validateNew, AnoModeloVeiculoEditValidate validateEdit, IBaseCrudRepository baseCrudRepository)
+        public AnoModeloVeiculoService(IAnoModeloVeiculoRepository anoModeloVeiculoQueryRepository, AnoModeloVeiculoNewValidate validateNew, AnoModeloVeiculoEditValidate validateEdit, IBaseCrudRepository baseCrudRepository)
         {
             _anoModeloVeiculoQueryRepository = anoModeloVeiculoQueryRepository;
             _validateNew = validateNew;
@@ -37,7 +37,7 @@ namespace RSauto.Application.Services.Cadastros
             return new CommandResult(true, "Cadastro atualizado com sucesso.");
         }
 
-        public async Task<ICommandResult> Insert(string nome)
+        public async Task<ICommandResult> Create(string nome)
         {
             var retorno = _validateNew.Validate(new AnoModeloVeiculoEntity { DESCRICAO = nome });
             if (!retorno.IsValid)
@@ -46,7 +46,7 @@ namespace RSauto.Application.Services.Cadastros
             if (await _anoModeloVeiculoQueryRepository.PossuiMarcaPeca(nome))
                 return new CommandResult(false, "Já possui uma marca com a descrição informada");
 
-            await _baseCrudRepository.Insert(new AnoModeloVeiculoEntity { ID_ANO_MOD_VEIC = 0, DESCRICAO = nome });
+            await _baseCrudRepository.Create(new AnoModeloVeiculoEntity { ID_ANO_MOD_VEIC = 0, DESCRICAO = nome });
             return new CommandResult(true, "Cadastro realizado com sucesso.");
         }
 
@@ -54,6 +54,11 @@ namespace RSauto.Application.Services.Cadastros
         {
             await _baseCrudRepository.Remove(new AnoModeloVeiculoEntity { ID_ANO_MOD_VEIC = id });
             return new CommandResult(true, "Cadastro removido com sucesso.");
+        }
+
+        public async Task<ICommandResult> Listar()
+        {
+            return new CommandResult(true, "Consulta realizado com sucesso", await _anoModeloVeiculoQueryRepository.Listar());
         }
     }
 }

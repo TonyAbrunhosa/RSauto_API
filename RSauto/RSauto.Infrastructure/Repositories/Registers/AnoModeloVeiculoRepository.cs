@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace RSauto.Infrastructure.Repositories.Registers
 {
-    public class AnoModeloVeiculoQueryRepository : IAnoModeloVeiculoQueryRepository
+    public class AnoModeloVeiculoRepository : IAnoModeloVeiculoRepository
     {
         private readonly SqlCommunication _sql;
 
-        public AnoModeloVeiculoQueryRepository(SqlCommunication sql)
+        public AnoModeloVeiculoRepository(SqlCommunication sql)
         {
             _sql = sql;
         }

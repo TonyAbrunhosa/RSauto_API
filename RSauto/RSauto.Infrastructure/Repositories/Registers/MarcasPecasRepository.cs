@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace RSauto.Infrastructure.Repositories.Registers
 {
-    public class MarcasPecasQueryRepository : IMarcasPecasQueryRepository
+    public class MarcasPecasRepository : IMarcasPecasRepository
     {
         private readonly SqlCommunication _sql;
 
-        public MarcasPecasQueryRepository(SqlCommunication sql)
+        public MarcasPecasRepository(SqlCommunication sql)
         {
             _sql = sql;
         }

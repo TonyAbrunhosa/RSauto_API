@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace RSauto.Domain.Contracts.Repositories.Registers
 {
-    public interface ICilindradaVeiculosRepository: IBaseCrudRepository
-    {
+    public interface ICilindradaVeiculosRepository
+    {        
         Task<IEnumerable<CilindradaVeiculosEntity>> Listar();
-        Task<bool> PossuiMarcaPeca(string nome, int id = 0);
+        Task<bool> PossuiCilindrada(string nome, int iD_CILINDRADA = 0);
     }
 }

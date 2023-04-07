@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace RSauto.Domain.Contracts.Repositories.Registers
 {
-    public interface IAnoModeloVeiculoQueryRepository
+    public interface IAnoModeloVeiculoRepository
     {
         Task<IEnumerable<AnoModeloVeiculoEntity>> Listar();
         Task<bool> PossuiMarcaPeca(string nome, int id = 0);

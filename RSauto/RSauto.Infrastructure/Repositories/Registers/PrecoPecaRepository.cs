@@ -1,4 +1,5 @@
-﻿using Dapper.Contrib.Extensions;
+﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using Microsoft.Extensions.Logging;
 using RSauto.Domain.Contracts.Repositories.Registers;
 using RSauto.Domain.Entities;
@@ -10,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace RSauto.Infrastructure.Repositories.Registers
 {
-    public class ListaPrecoPecaRepository : IListaPrecoPecasRepository
+    public class PrecoPecaRepository : IListaPrecoPecasRepository
     {
         private readonly SqlCommunication _sql;
-        private readonly ILogger<ListaPrecoPecaRepository> _logger;
+        private readonly ILogger<PrecoPecaRepository> _logger;
 
-        public ListaPrecoPecaRepository(SqlCommunication sql, ILogger<ListaPrecoPecaRepository> logger)
+        public PrecoPecaRepository(SqlCommunication sql, ILogger<PrecoPecaRepository> logger)
         {
             _sql = sql;
             _logger = logger;
@@ -26,7 +27,7 @@ namespace RSauto.Infrastructure.Repositories.Registers
             await _sql.ExcuteAsyncDapper("BEGIN UPDATE LISTA_PRECO_PECAS SET STATUS = @Status WHERE ID_PRECO_PECA = @IdPrecoPeca END", new { IdPrecoPeca = idPrecoPeca, Status = status });
         }
 
-        public async Task<bool> Atualizar(ListaPrecoPecasEntity entity)
+        public async Task<bool> Update(PrecoPecasEntity entity)
         {
             using (var connection = new SqlConnection(_sql.GetConnectionString()))
             {
@@ -35,10 +36,9 @@ namespace RSauto.Infrastructure.Repositories.Registers
                 {
                     try
                     {
-                        await CrudListaPrecoPecas(entity, connection, transaction);
-                        await NovoHistoricoPrecosPecas(entity.HistoricoPrecosPecas, entity.ID_PRECO_PECA, connection, transaction);
-                        await CrudListaAnoModeloPreco(entity.ListaAnoModeloPreco, entity.ID_PRECO_PECA, connection, transaction);
-                        await CrudEstoquePecas(entity.EstoquePecas, entity.ID_PRECO_PECA, connection, transaction);
+                        await CrudPrecoPecas(entity, connection, transaction);
+                        await CrudHistoricoPrecosPecas(entity.HistoricoPrecosPecas, entity.ID_PRECO_PECA, connection, transaction);
+                        await CrudListaAnoModeloPreco(entity.ListaAnoModeloPreco, entity.ID_PRECO_PECA, connection, transaction);                        
 
                         transaction.Commit();
 
@@ -53,7 +53,7 @@ namespace RSauto.Infrastructure.Repositories.Registers
             }
         }
 
-        public async Task<int> Novo(ListaPrecoPecasEntity entity)
+        public async Task<int> Create(PrecoPecasEntity entity)
         {
             using (var connection = new SqlConnection(_sql.GetConnectionString()))
             {
@@ -62,10 +62,9 @@ namespace RSauto.Infrastructure.Repositories.Registers
                 {
                     try
                     {                        
-                        int IdPrecoPeca = await CrudListaPrecoPecas(entity, connection, transaction);
-                        await NovoHistoricoPrecosPecas(entity.HistoricoPrecosPecas, IdPrecoPeca, connection, transaction);
-                        await CrudListaAnoModeloPreco(entity.ListaAnoModeloPreco, IdPrecoPeca, connection, transaction);
-                        await CrudEstoquePecas(entity.EstoquePecas, IdPrecoPeca, connection, transaction);
+                        int IdPrecoPeca = await CrudPrecoPecas(entity, connection, transaction);
+                        await CrudHistoricoPrecosPecas(entity.HistoricoPrecosPecas, IdPrecoPeca, connection, transaction);
+                        await CrudListaAnoModeloPreco(entity.ListaAnoModeloPreco, IdPrecoPeca, connection, transaction);                        
 
                         transaction.Commit();
 
@@ -79,7 +78,7 @@ namespace RSauto.Infrastructure.Repositories.Registers
                 }
             }
         }
-        private async Task<int> CrudListaPrecoPecas(ListaPrecoPecasEntity entity, SqlConnection connection, SqlTransaction transaction)
+        private async Task<int> CrudPrecoPecas(PrecoPecasEntity entity, SqlConnection connection, SqlTransaction transaction)
         {
             if(entity.ID_PRECO_PECA == 0)
                 return await connection.InsertAsync(entity, transaction: transaction, commandTimeout: 900);
@@ -88,23 +87,37 @@ namespace RSauto.Infrastructure.Repositories.Registers
 
             return entity.ID_PRECO_PECA;
         }
-        private async Task NovoHistoricoPrecosPecas(HistoricoPrecosPecasEntity entity, int idPrecoPeca, SqlConnection connection, SqlTransaction transaction)
-        {
-            if(entity.ID_HIST_PRECO == 0)
+        private async Task CrudHistoricoPrecosPecas(HistoricosPrecoPecasEntity entity, int idPrecoPeca, SqlConnection connection, SqlTransaction transaction)
+        {            
+            var idEstoque = await CrudEstoquePecas(entity.EstoquePecas, idPrecoPeca, connection, transaction);
+
+            if (entity.ID_HIST_PRECO_PECA == 0)
             {
-                entity.ID_PRECO_PECA = idPrecoPeca;
-                await connection.InsertAsync(entity, transaction: transaction, commandTimeout: 900);
-            }            
-        }
-        private async Task CrudEstoquePecas(EstoquePecasEntity entity, int idPrecoPeca, SqlConnection connection, SqlTransaction transaction)
-        {
-            if (entity.ID_ESTOQUE_PECAS == 0)
-            {
+                if(idEstoque > 0)
+                    entity.ID_ESTOQUE_PECAS= idEstoque;
+
                 entity.ID_PRECO_PECA = idPrecoPeca;
                 await connection.InsertAsync(entity, transaction: transaction, commandTimeout: 900);
             }
             else
+            {
+                await connection.ExecuteAsync("BEGIN UPDATE HISTORICOS_PRECO_PECAS SET STATUS = @STATUS, ID_FORNECEDOR = @ID_FORNECEDOR WHERE ID_HIST_PRECO_PECA = @ID_HIST_PRECO_PECA END",
+                   new { STATUS = entity.STATUS, ID_FORNECEDOR = entity.ID_FORNECEDOR, ID_HIST_PRECO_PECA = entity.ID_HIST_PRECO_PECA }, transaction: transaction, commandTimeout: 900);
+            }
+            
+        }
+        private async Task<int> CrudEstoquePecas(EstoquePecasEntity entity, int idPrecoPeca, SqlConnection connection, SqlTransaction transaction)
+        {
+            if (entity.ID_ESTOQUE_PECAS == 0)
+            {                
+                entity.ID_PRECO_PECA = idPrecoPeca;
+                if(entity.QTDE_ESTOQUE > 0)
+                    return await connection.InsertAsync(entity, transaction: transaction, commandTimeout: 900);
+            }
+            else
                 await connection.UpdateAsync(entity, transaction: transaction, commandTimeout: 900);
+
+            return 0;
         }
         private async Task CrudListaAnoModeloPreco(List<ListaAnoModeloPrecoEntity> listaAnoModeloPreco, int idPrecoPeca, SqlConnection connection, SqlTransaction transaction)
         {

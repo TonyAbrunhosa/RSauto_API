@@ -5,8 +5,8 @@ namespace RSauto.Domain.Contracts.Repositories.Registers
 {
     public interface IListaPrecoPecasRepository
     {
-        Task<int> Novo(ListaPrecoPecasEntity entity);
-        Task<bool> Atualizar(ListaPrecoPecasEntity entity);
+        Task<int> Create(PrecoPecasEntity entity);
+        Task<bool> Update(PrecoPecasEntity entity);
         Task AlterarStaus(int idPrecoPeca, int status);
     }
 }

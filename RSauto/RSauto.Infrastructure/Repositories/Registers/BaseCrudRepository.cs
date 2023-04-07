@@ -18,7 +18,7 @@ namespace RSauto.Infrastructure.Repositories.Cadastros
             await _sql.UpdateAsyncDapper<T>(entity);
         }
 
-        public async Task Insert<T>(T entity) where T : class 
+        public async Task Create<T>(T entity) where T : class 
         {
             await _sql.InsertAsyncDapper<T>(entity);
         }

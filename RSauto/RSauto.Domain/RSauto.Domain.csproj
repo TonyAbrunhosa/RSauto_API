@@ -5,17 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Entities\Cadastro\ListaPrecoPecas\Input\**" />
+    <Compile Remove="Entities\Cadastro\MarcasVeiculos\Input\**" />
+    <EmbeddedResource Remove="Entities\Cadastro\ListaPrecoPecas\Input\**" />
+    <EmbeddedResource Remove="Entities\Cadastro\MarcasVeiculos\Input\**" />
+    <None Remove="Entities\Cadastro\ListaPrecoPecas\Input\**" />
+    <None Remove="Entities\Cadastro\MarcasVeiculos\Input\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
     <PackageReference Include="FluentValidation" Version="11.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RSauto.Shared\RSauto.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Entities\Cadastro\ListaPrecoPecas\Input\" />
-    <Folder Include="Entities\Cadastro\MarcasVeiculos\Input\" />
   </ItemGroup>
 
 </Project>

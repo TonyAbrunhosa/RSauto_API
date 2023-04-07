@@ -9,19 +9,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RSauto.API.Controllers.Registers
-{
-    [Route("api/[controller]")]
-    [ApiController]
+{    
     [Authorize(AuthenticationSchemes = "Bearer")]
-    public class ModelosVeiculosController : Controller
+    public class ModelosVeiculosController : BaseApiController
     {
-        private readonly IModelosVeiculosService _modelosVeiculosService;
-        private readonly IModelosVeiculosQueryService _modelosVeiculosQueryService;
+        private readonly IModelosVeiculosService _service;
 
-        public ModelosVeiculosController(IModelosVeiculosService modelosVeiculosService, IModelosVeiculosQueryService modelosVeiculosQueryService)
+        public ModelosVeiculosController(IModelosVeiculosService service)
         {
-            _modelosVeiculosService = modelosVeiculosService;
-            _modelosVeiculosQueryService = modelosVeiculosQueryService;
+            _service = service;
         }
 
         [HttpPost("Create")]
@@ -31,7 +27,7 @@ namespace RSauto.API.Controllers.Registers
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Insert([FromBody] ModelosVeiculosInput input)
         {
-            ICommandResult retorno = await _modelosVeiculosService.Insert(input);
+            ICommandResult retorno = await _service.Create(input);
 
             if (retorno.Sucesso)
                 return Ok(retorno);
@@ -46,9 +42,9 @@ namespace RSauto.API.Controllers.Registers
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Atualizar([FromBody] ModelosVeiculosInput input, int id)
+        public async Task<IActionResult> Atualizar(int id, [FromBody] ModelosVeiculosInput input)
         {
-            ICommandResult retorno = await _modelosVeiculosService.Update(id, input);
+            ICommandResult retorno = await _service.Update(id, input);
 
             if (retorno.Sucesso)
                 return Ok(retorno);
@@ -58,22 +54,22 @@ namespace RSauto.API.Controllers.Registers
                 return BadRequest(retorno);
         }
 
-        [HttpDelete("Delete/{id:int}")]
-        [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Remove(int id)
-        {
-            ICommandResult retorno = await _modelosVeiculosService.Remove(id);
+        //[HttpDelete("Delete/{id:int}")]
+        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status200OK)]
+        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
+        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
+        //public async Task<IActionResult> Remove(int id)
+        //{
+        //    ICommandResult retorno = await _service.Remove(id);
 
-            if (retorno.Sucesso)
-                return Ok(retorno);
-            else if (!retorno.Sucesso && retorno.Dados != null)
-                return UnprocessableEntity(retorno);
-            else
-                return BadRequest(retorno);
-        }
+        //    if (retorno.Sucesso)
+        //        return Ok(retorno);
+        //    else if (!retorno.Sucesso && retorno.Dados != null)
+        //        return UnprocessableEntity(retorno);
+        //    else
+        //        return BadRequest(retorno);
+        //}
 
         [HttpGet("Listar")]
         [ProducesResponseType(typeof(IEnumerable<ModelosVeiculosEntity>), StatusCodes.Status200OK)]
@@ -82,7 +78,7 @@ namespace RSauto.API.Controllers.Registers
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Listar()
         {
-            ICommandResult retorno = await _modelosVeiculosQueryService.Listar();
+            ICommandResult retorno = await _service.Listar();
             
             if (retorno.Sucesso)
                 return Ok(retorno);

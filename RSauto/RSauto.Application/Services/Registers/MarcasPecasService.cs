@@ -12,11 +12,11 @@ namespace RSauto.Application.Services.Cadastros
     public class MarcasPecasService: IMarcasPecasService
     {
         private readonly IBaseCrudRepository _baseCrudRepository;
-        private readonly IMarcasPecasQueryRepository _marcasPecasQueryRepository;
+        private readonly IMarcasPecasRepository _marcasPecasQueryRepository;
         private readonly MarcasPecasNewValidate _validateNew;
         private readonly MarcasPecasEditValidate _validateEdit;
 
-        public MarcasPecasService(IBaseCrudRepository baseCrudRepository, IMarcasPecasQueryRepository marcasPecasQueryRepository, MarcasPecasNewValidate validateNew, MarcasPecasEditValidate validateEdit)
+        public MarcasPecasService(IBaseCrudRepository baseCrudRepository, IMarcasPecasRepository marcasPecasQueryRepository, MarcasPecasNewValidate validateNew, MarcasPecasEditValidate validateEdit)
         {
             _baseCrudRepository = baseCrudRepository;
             _marcasPecasQueryRepository = marcasPecasQueryRepository;
@@ -37,7 +37,7 @@ namespace RSauto.Application.Services.Cadastros
             return new CommandResult(true, "Cadastro atualizado com sucesso.");
         }
 
-        public async Task<ICommandResult> Insert(string nome)
+        public async Task<ICommandResult> Create(string nome)
         {
             var retorno = _validateNew.Validate(new MarcasPecasEntity { DESCRICAO = nome });
             if (!retorno.IsValid)
@@ -46,7 +46,7 @@ namespace RSauto.Application.Services.Cadastros
             if (await _marcasPecasQueryRepository.PossuiMarcaPeca(nome))
                 return new CommandResult(false, "Já possui uma marca com a descrição informada");
 
-            await _baseCrudRepository.Insert(new MarcasPecasEntity { ID_MARCA_PECAS = 0, DESCRICAO = nome });
+            await _baseCrudRepository.Create(new MarcasPecasEntity { ID_MARCA_PECAS = 0, DESCRICAO = nome });
             return new CommandResult(true, "Cadastro realizado com sucesso.");
         }
 
@@ -54,6 +54,11 @@ namespace RSauto.Application.Services.Cadastros
         {
             await _baseCrudRepository.Remove(new MarcasPecasEntity { ID_MARCA_PECAS = id });
             return new CommandResult(true, "Cadastro removido com sucesso.");
+        }
+
+        public async Task<ICommandResult> Listar()
+        {
+            return new CommandResult(true, "Consulta realizado com sucesso", await _marcasPecasQueryRepository.Listar());
         }
     }
 }

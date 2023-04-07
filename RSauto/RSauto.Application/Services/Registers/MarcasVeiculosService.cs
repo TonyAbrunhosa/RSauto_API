@@ -12,14 +12,14 @@ namespace RSauto.Application.Services.Cadastros
     public class MarcasVeiculosService : IMarcasVeiculosService
     {
         private readonly IBaseCrudRepository _baseCrudRepository;
-        private readonly IMarcasVeiculosQueryRepository _marcasVeiculosQueryRepository;
+        private readonly IMarcasVeiculosRepository _marcasVeiculosRepository;
         private readonly MarcasVeiculosNewValidate _validateNew;
         private readonly MarcasVeiculosEditValidate _validateEdit;
 
-        public MarcasVeiculosService(IBaseCrudRepository marcasVeiculosRepository, IMarcasVeiculosQueryRepository marcasVeiculosQueryRepository, MarcasVeiculosNewValidate validateNew, MarcasVeiculosEditValidate validateEdit)
+        public MarcasVeiculosService(IBaseCrudRepository baseCrudRepository, IMarcasVeiculosRepository marcasVeiculosRepository, MarcasVeiculosNewValidate validateNew, MarcasVeiculosEditValidate validateEdit)
         {
-            _baseCrudRepository = marcasVeiculosRepository;
-            _marcasVeiculosQueryRepository = marcasVeiculosQueryRepository;
+            _baseCrudRepository = baseCrudRepository;
+            _marcasVeiculosRepository = marcasVeiculosRepository;
             _validateNew = validateNew;
             _validateEdit = validateEdit;
         }
@@ -30,23 +30,23 @@ namespace RSauto.Application.Services.Cadastros
             if (!retorno.IsValid)
                 return new CommandResult(false, "Atenção", ReturnErrors.CreateObjetError(retorno.Errors));
 
-            if (await _marcasVeiculosQueryRepository.PossuiMarcaVeiculo(entity.NOME, entity.ID_MARCA))
+            if (await _marcasVeiculosRepository.PossuiMarcaVeiculo(entity.NOME, entity.ID_MARCA))
                 return new CommandResult(false, "Já possui uma marca com a descrição informada");
 
             await _baseCrudRepository.Update(entity);
             return new CommandResult(true, "Cadastro atualizado com sucesso.");
         }
 
-        public async Task<ICommandResult> Insert(string nome)
+        public async Task<ICommandResult> Create(string nome)
         {
             var retorno = _validateNew.Validate(new MarcasVeiculosEntity { NOME = nome });
             if (!retorno.IsValid)
                 return new CommandResult(false, "Atenção", ReturnErrors.CreateObjetError(retorno.Errors));
 
-            if (await _marcasVeiculosQueryRepository.PossuiMarcaVeiculo(nome))
+            if (await _marcasVeiculosRepository.PossuiMarcaVeiculo(nome))
                 return new CommandResult(false, "Já possui uma marca com a descrição informada");
 
-            await _baseCrudRepository.Insert(new MarcasVeiculosEntity { ID_MARCA=0, NOME=nome });
+            await _baseCrudRepository.Create(new MarcasVeiculosEntity { ID_MARCA=0, NOME=nome });
             return new CommandResult(true, "Cadastro realizado com sucesso.");
         }
 
@@ -54,6 +54,10 @@ namespace RSauto.Application.Services.Cadastros
         {
             await _baseCrudRepository.Remove(new MarcasVeiculosEntity { ID_MARCA = id });
             return new CommandResult(true, "Cadastro removido com sucesso.");
+        }
+        public async Task<ICommandResult> Listar()
+        {
+            return new CommandResult(true, "Consulta realizado com sucesso", await _marcasVeiculosRepository.Listar());
         }
     }
 }

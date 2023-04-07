@@ -3,6 +3,7 @@ using RSauto.Domain.Entities;
 using RSauto.Shared.Communication;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RSauto.Infrastructure.Repositories.Registers
@@ -16,29 +17,22 @@ namespace RSauto.Infrastructure.Repositories.Registers
             _sql = sql;
         }
 
-        public Task Insert<T>(T entity) where T : class
+        public async Task<IEnumerable<CilindradaVeiculosEntity>> Listar()
         {
-            throw new NotImplementedException();
+            return await _sql.QueryAsyncDapper<CilindradaVeiculosEntity>(@"BEGIN SELECT ID_CILINDRADA, DESCRICAO FROM CILINDRADA_VEICULOS WITH(NOLOCK) END");
         }
 
-        public Task<IEnumerable<CilindradaVeiculosEntity>> Listar()
+        public async Task<bool> PossuiCilindrada(string nome, int id = 0)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> PossuiMarcaPeca(string nome, int id = 0)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Remove<T>(T entity) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Update<T>(T entity) where T : class
-        {
-            throw new NotImplementedException();
+            return ((await _sql.QueryAsyncDapper<CilindradaVeiculosEntity>(@"
+                BEGIN 
+                    SELECT 
+                        TOP 1 
+                        ID_CILINDRADA 
+                    FROM CILINDRADA_VEICULOS  WITH(NOLOCK)
+                    WHERE DESCRICAO = @nome 
+                    AND (@id = 0 OR ID_CILINDRADA != @id)
+                END", new { nome = nome, id = id }))?.Count() ?? 0) > 0;
         }
     }
 }
