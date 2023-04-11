@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 
 namespace RSauto.Domain.Contracts.Repositories.Registers
 {
-    public interface IListaPrecoPecasRepository
+    public interface IPrecoPecasRepository
     {
         Task<int> Create(PrecoPecasEntity entity);
         Task<bool> Update(PrecoPecasEntity entity);
-        Task AlterarStaus(int idPrecoPeca, int status);
+        Task<bool> UpdateStatus(int idPrecoPeca, bool status);
     }
 }

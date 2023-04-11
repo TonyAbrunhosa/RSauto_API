@@ -11,20 +11,20 @@ using System.Threading.Tasks;
 
 namespace RSauto.Infrastructure.Repositories.Registers
 {
-    public class PrecoPecaRepository : IListaPrecoPecasRepository
+    public class PrecoPecasRepository : IPrecoPecasRepository
     {
         private readonly SqlCommunication _sql;
-        private readonly ILogger<PrecoPecaRepository> _logger;
+        private readonly ILogger<PrecoPecasRepository> _logger;
 
-        public PrecoPecaRepository(SqlCommunication sql, ILogger<PrecoPecaRepository> logger)
+        public PrecoPecasRepository(SqlCommunication sql, ILogger<PrecoPecasRepository> logger)
         {
             _sql = sql;
             _logger = logger;
         }
 
-        public async Task AlterarStaus(int idPrecoPeca, int status)
+        public async Task<bool> UpdateStatus(int idPrecoPeca, bool status)
         {
-            await _sql.ExcuteAsyncDapper("BEGIN UPDATE LISTA_PRECO_PECAS SET STATUS = @Status WHERE ID_PRECO_PECA = @IdPrecoPeca END", new { IdPrecoPeca = idPrecoPeca, Status = status });
+            return await _sql.ExcuteAsyncDapper("BEGIN UPDATE PRECO_PECAS SET STATUS = @Status WHERE ID_PRECO_PECA = @IdPrecoPeca END", new { IdPrecoPeca = idPrecoPeca, Status = status }) > 0;
         }
 
         public async Task<bool> Update(PrecoPecasEntity entity)

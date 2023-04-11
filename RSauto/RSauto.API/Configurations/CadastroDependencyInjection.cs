@@ -25,6 +25,7 @@ namespace RSauto.API.Configurations
             services.AddTransient<IMarcasVeiculosService, MarcasVeiculosService>();            
             services.AddTransient<IModelosVeiculosService, ModelosVeiculosService>();
             services.AddTransient<ICilindradaVeiculosService, CilindradaVeiculosService>();
+            services.AddTransient<IPrecoPecasService, PrecoPecasService>();
 
             //REPOSITORY
             services.AddTransient<IBaseCrudRepository, BaseCrudRepository>();
@@ -33,6 +34,7 @@ namespace RSauto.API.Configurations
             services.AddTransient<IMarcasVeiculosRepository, MarcasVeiculosRepository>();
             services.AddTransient<IModelosVeiculosRepository, ModelosVeiculosRepository>();
             services.AddTransient<ICilindradaVeiculosRepository, CilindradaVeiculosRepository>();
+            services.AddTransient<IPrecoPecasRepository, PrecoPecasRepository>();
 
             //VALIDATE
             services.AddFluentValidationClientsideAdapters();

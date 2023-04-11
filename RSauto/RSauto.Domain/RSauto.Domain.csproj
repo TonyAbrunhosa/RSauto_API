@@ -5,11 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Entities\Cadastro\ListaPrecoPecas\Input\**" />
     <Compile Remove="Entities\Cadastro\MarcasVeiculos\Input\**" />
-    <EmbeddedResource Remove="Entities\Cadastro\ListaPrecoPecas\Input\**" />
     <EmbeddedResource Remove="Entities\Cadastro\MarcasVeiculos\Input\**" />
-    <None Remove="Entities\Cadastro\ListaPrecoPecas\Input\**" />
     <None Remove="Entities\Cadastro\MarcasVeiculos\Input\**" />
   </ItemGroup>
 

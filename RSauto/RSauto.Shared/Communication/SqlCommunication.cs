@@ -108,15 +108,16 @@ namespace RSauto.Shared.Communication
             }
         }
 
-        public async Task ExcuteAsyncDapper(string strSql, object param = null, int timeout = 900)
+        public async Task<int> ExcuteAsyncDapper(string strSql, object param = null, int timeout = 900)
         {
             var ConnectionString = _configuration.ConnectionStrings("RSautoDb");
 
-            if (string.IsNullOrEmpty(ConnectionString))
-                _logger.LogInformation("Não foi encontrada a ConnectionString.");
+            if (!string.IsNullOrEmpty(ConnectionString))
+                using (var Conn = new SqlConnection(ConnectionString))
+                    return await Conn.ExecuteAsync(strSql, param, commandTimeout: timeout);
 
-            using (var Conn = new SqlConnection(ConnectionString))
-                await Conn.ExecuteAsync(strSql, param, commandTimeout: timeout);
+            _logger.LogInformation("Não foi encontrada a ConnectionString.");
+            return 0;
         }
         public string GetConnectionString()
         {
