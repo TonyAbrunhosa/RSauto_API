@@ -5,16 +5,22 @@ namespace RSauto.Domain.Entities.Cadastro.PrecoPecas.Input
     public class PrecoPecasCreateInput
     {
         public int ID_MARCA_PECAS { get; set; }
+        public string DESC_MARCA_PECAS { get; set; }
+        public int ID_MARCA { get; set; }
+        public string DESC_MARCA { get; set; }
         public int ID_MODELO { get; set; }
+        public string DESC_MODELO { get; set; }
         public int ID_PECA { get; set; }
+        public string DESC_PECA { get; set; }
         public bool STATUS { get; set; }
         public string CODIGO_PECA { get; set; }
-        public HistoricosPrecoPecasCreateInput HistoricoPrecosPecas { get; set; }
+        public IEnumerable<HistoricosPrecoPecasCreateInput> HistoricoPrecosPecas { get; set; }
         public IEnumerable<ListaAnoModeloPrecoCreateinput> ListaAnoModeloPreco { get; set; }
 
         public class HistoricosPrecoPecasCreateInput
         {
-            public int ID_FORNECEDOR { get; set; }            
+            public int ID_FORNECEDOR { get; set; }
+            public string DESC_FORNECEDOR { get; set; }
             public decimal PRECO { get; set; }
             public decimal CUSTO { get; set; }
             public EstoquePecasCreateInput EstoquePecas { get; set; }

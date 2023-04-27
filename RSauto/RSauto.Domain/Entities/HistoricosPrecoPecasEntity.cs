@@ -17,5 +17,7 @@ namespace RSauto.Domain.Entities
         public bool STATUS { get; set; }
         [Write(false)]
         public EstoquePecasEntity EstoquePecas { get; set; }
+        [Write(false)]
+        public FornecedoresEntity Fornecedores { get; set; }
     }
 }

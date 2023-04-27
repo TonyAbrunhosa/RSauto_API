@@ -1,17 +1,17 @@
-﻿using Dapper.Contrib.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace RSauto.Domain.Entities.Cadastro.PrecoPecas.Input
 {
     public  class PrecoPecasUpdateInput
-    {        
+    {
         public int ID_MARCA_PECAS { get; set; }
+        public string DESC_MARCA_PECAS { get; set; }
+        public int ID_MARCA { get; set; }
+        public string DESC_MARCA { get; set; }
         public int ID_MODELO { get; set; }
+        public string DESC_MODELO { get; set; }
         public int ID_PECA { get; set; }
+        public string DESC_PECA { get; set; }
         public bool STATUS { get; set; }
         public string CODIGO_PECA { get; set; }
         public HistoricosPrecoPecasUpdateInput HistoricoPrecosPecas { get; set; }
@@ -21,6 +21,7 @@ namespace RSauto.Domain.Entities.Cadastro.PrecoPecas.Input
         {
             public int ID_HIST_PRECO_PECA { get; set; }
             public int ID_FORNECEDOR { get; set; }
+            public string DESC_FORNECEDOR { get; set; }
             public bool STATUS { get; set; }
             public EstoquePecasUpdateInput EstoquePecas { get; set; }
         }

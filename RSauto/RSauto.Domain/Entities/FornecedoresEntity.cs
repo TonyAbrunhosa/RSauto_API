@@ -2,11 +2,11 @@
 
 namespace RSauto.Domain.Entities
 {
-    [Table("MARCAS_VEICULOS")]
-    public class MarcasVeiculosEntity
+    [Table("FORNECEDORES")]
+    public class FornecedoresEntity
     {
         [Key]
-        public int ID_MARCA { get; set; }
+        public int ID_FORNECEDOR { get; set; }
         public string DESCRICAO { get; set; }
     }
 }

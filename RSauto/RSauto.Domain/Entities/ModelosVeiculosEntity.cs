@@ -7,7 +7,7 @@ namespace RSauto.Domain.Entities
     {
         [Key]
         public int ID_MODELO { get; set; }
-        public string NOME { get; set; }
+        public string DESCRICAO { get; set; }
         public int ID_MARCA { get; set; }
     }
 }

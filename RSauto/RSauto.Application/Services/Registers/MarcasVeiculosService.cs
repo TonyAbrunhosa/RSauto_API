@@ -30,7 +30,7 @@ namespace RSauto.Application.Services.Cadastros
             if (!retorno.IsValid)
                 return new CommandResult(false, "Atenção", ReturnErrors.CreateObjetError(retorno.Errors));
 
-            if (await _marcasVeiculosRepository.PossuiMarcaVeiculo(entity.NOME, entity.ID_MARCA))
+            if (await _marcasVeiculosRepository.PossuiMarcaVeiculo(entity.DESCRICAO, entity.ID_MARCA))
                 return new CommandResult(false, "Já possui uma marca com a descrição informada");
 
             await _baseCrudRepository.Update(entity);
@@ -39,14 +39,14 @@ namespace RSauto.Application.Services.Cadastros
 
         public async Task<ICommandResult> Create(string nome)
         {
-            var retorno = _validateNew.Validate(new MarcasVeiculosEntity { NOME = nome });
+            var retorno = _validateNew.Validate(new MarcasVeiculosEntity { DESCRICAO = nome });
             if (!retorno.IsValid)
                 return new CommandResult(false, "Atenção", ReturnErrors.CreateObjetError(retorno.Errors));
 
             if (await _marcasVeiculosRepository.PossuiMarcaVeiculo(nome))
                 return new CommandResult(false, "Já possui uma marca com a descrição informada");
 
-            await _baseCrudRepository.Create(new MarcasVeiculosEntity { ID_MARCA=0, NOME=nome });
+            await _baseCrudRepository.Create(new MarcasVeiculosEntity { ID_MARCA=0, DESCRICAO =nome });
             return new CommandResult(true, "Cadastro realizado com sucesso.");
         }
 

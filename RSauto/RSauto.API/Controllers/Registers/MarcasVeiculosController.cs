@@ -43,7 +43,7 @@ namespace RSauto.API.Controllers.Registers
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update(int id, [FromBody] string nome)
         {
-            ICommandResult retorno = await _service.Update(new MarcasVeiculosEntity { ID_MARCA = id, NOME = nome });
+            ICommandResult retorno = await _service.Update(new MarcasVeiculosEntity { ID_MARCA = id, DESCRICAO = nome });
 
             if (retorno.Sucesso)
                 return Ok(retorno);
