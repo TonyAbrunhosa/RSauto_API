@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RSauto.Domain.Contracts.Command;
 using RSauto.Domain.Contracts.Services;
-using RSauto.Domain.Entities.Command;
 using RSauto.Domain.Entities.Token.Input;
-using System;
 using System.Threading.Tasks;
 
 namespace RSauto.API.Controllers
-{    
-    public class TokenController : BaseApiController
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TokenController : ControllerBase
     {
         private readonly ITokenService _service;
 

@@ -7,7 +7,7 @@ namespace RSauto.Domain.Entities.Cadastro.ModelosVeiculos
     {
         public ModelosVeiculosValidate()
         {
-            RuleFor(x => x.NOME).NotEmpty().NotNull().WithMessage("Informe o nome do modelo.").MinimumLength(3);
+            RuleFor(x => x.DESCRICAO).NotEmpty().NotNull().WithMessage("Informe o descrição do modelo do veiculo.").MinimumLength(3);
             RuleFor(x => x.ID_MARCA).NotEmpty().NotNull().WithMessage("Informe o id modelo.").Must(x => x > 0);
         }
     }

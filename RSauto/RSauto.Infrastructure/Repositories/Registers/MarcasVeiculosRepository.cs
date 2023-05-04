@@ -18,7 +18,7 @@ namespace RSauto.Infrastructure.Repositories.Registers
 
         public async Task<IEnumerable<MarcasVeiculosEntity>> Listar()
         {
-            return await _sql.QueryAsyncDapper<MarcasVeiculosEntity>(@"BEGIN SELECT ID_MARCA, NOME FROM MARCAS_VEICULOS END");
+            return await _sql.QueryAsyncDapper<MarcasVeiculosEntity>(@"BEGIN SELECT ID_MARCA, DESCRICAO FROM MARCAS_VEICULOS END");
         }
 
         public async Task<bool> PossuiMarcaVeiculo(string nome, int id = 0)
@@ -29,7 +29,7 @@ namespace RSauto.Infrastructure.Repositories.Registers
                         TOP 1 
                         ID_MARCA 
                     FROM MARCAS_VEICULOS 
-                    WHERE NOME = @nome 
+                    WHERE DESCRICAO = @nome 
                     AND (@id = 0 OR ID_MARCA != @id)
                 END", new { nome = nome, id = id }))?.Count() ?? 0) > 0;
         }

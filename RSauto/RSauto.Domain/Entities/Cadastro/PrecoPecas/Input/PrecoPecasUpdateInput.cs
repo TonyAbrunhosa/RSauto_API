@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RSauto.Domain.Entities.Cadastro.ModelosVeiculos.input;
+using System.Collections.Generic;
 
 namespace RSauto.Domain.Entities.Cadastro.PrecoPecas.Input
 {
@@ -8,14 +9,20 @@ namespace RSauto.Domain.Entities.Cadastro.PrecoPecas.Input
         public string DESC_MARCA_PECAS { get; set; }
         public int ID_MARCA { get; set; }
         public string DESC_MARCA { get; set; }
-        public int ID_MODELO { get; set; }
-        public string DESC_MODELO { get; set; }
         public int ID_PECA { get; set; }
         public string DESC_PECA { get; set; }
         public bool STATUS { get; set; }
         public string CODIGO_PECA { get; set; }
-        public HistoricosPrecoPecasUpdateInput HistoricoPrecosPecas { get; set; }
+        public IEnumerable<ModelosVeiculosUpdateInput> Modelosveiculos { get; set; }
+        public IEnumerable<HistoricosPrecoPecasUpdateInput> HistoricoPrecosPecas { get; set; }
         public IEnumerable<ListaAnoModeloPrecoUpdateInput> ListaAnoModeloPreco { get; set; }
+
+        public class ModelosVeiculosUpdateInput
+        {
+            public int ID_MODELO { get; set; }
+            public string DESCRICAO { get; set; }
+            public bool REMOVER { get; set; }
+        }
 
         public class HistoricosPrecoPecasUpdateInput
         {
@@ -38,6 +45,7 @@ namespace RSauto.Domain.Entities.Cadastro.PrecoPecas.Input
             public int ID_ANO_MOD_PRECO { get; set; }
             public int ID_PRECO_PECA { get; set; }
             public int ID_ANO_MOD_VEIC { get; set; }
+            public string DESCRICAO { get; set; }
             public bool REMOVER { get; set; }
         }
     }    

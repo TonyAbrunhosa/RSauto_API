@@ -8,7 +8,7 @@ namespace RSauto.Domain.Entities.Cadastro.ModelosVeiculos.input
 {
     public class ModelosVeiculosInput
     {
-        public string NOME { get; set; }
+        public string DESCRICAO { get; set; }
         public int ID_MARCA { get; set; }
     }
 }

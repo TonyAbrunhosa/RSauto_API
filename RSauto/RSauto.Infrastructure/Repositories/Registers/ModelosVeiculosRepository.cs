@@ -18,7 +18,7 @@ namespace RSauto.Infrastructure.Repositories.Registers
 
         public async Task<IEnumerable<ModelosVeiculosEntity>> Listar()
         {
-            return await _sql.QueryAsyncDapper<ModelosVeiculosEntity>(@"BEGIN SELECT ID_MODELO, NOME, ID_MARCA FROM MODELOS_VEICULOS END");
+            return await _sql.QueryAsyncDapper<ModelosVeiculosEntity>(@"BEGIN SELECT ID_MODELO, DESCRICAO, ID_MARCA FROM MODELOS_VEICULOS END");
         }
 
         public async Task<bool> PossuiModeloVeiculo(string nome, int id = 0)

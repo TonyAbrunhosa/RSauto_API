@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RSauto.Domain.Contracts.Command;
 using RSauto.Domain.Contracts.Services.Registers;
-using RSauto.Domain.Entities;
 using RSauto.Domain.Entities.Cadastro.PrecoPecas.Input;
 using System.Threading.Tasks;
 

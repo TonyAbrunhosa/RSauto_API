@@ -46,10 +46,10 @@ namespace RSauto.Infrastructure.Repositories.Registers
 
                         return true;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         transaction.Rollback();
-                        return false;
+                        throw ex;
                     }
                 }
             }
@@ -72,10 +72,10 @@ namespace RSauto.Infrastructure.Repositories.Registers
 
                         return IdPrecoPeca;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         transaction.Rollback();
-                        return 0;
+                        throw ex; 
                     }
                 }
             }
@@ -90,34 +90,65 @@ namespace RSauto.Infrastructure.Repositories.Registers
         {
             if (entity.ID_PECA == 0)
                 entity.ID_PECA = await Create(entity.Pecas, connection, transaction);
+            else if (!string.IsNullOrEmpty(entity.Pecas.DESCRICAO))
+                await connection.ExecuteAsync("UPDATE PECAS SET DESCRICAO = @DESCRICAO WHERE ID_PECA = @ID_PECA", new { DESCRICAO = entity.Pecas.DESCRICAO, ID_PECA = entity.Pecas.ID_PECA }, transaction);
+
             if (entity.ID_MARCA_PECAS == 0)
                 entity.ID_MARCA_PECAS = await Create(entity.MarcasPecas, connection, transaction);
-            if (entity.ModelosVeiculos.ID_MARCA == 0)
-                entity.ModelosVeiculos.ID_MARCA = await Create(entity.MarcasVeiculos, connection, transaction);
-            if (entity.ID_MODELO == 0)
-                entity.ID_MODELO = await Create(entity.ModelosVeiculos, connection, transaction);
+            else if (!string.IsNullOrEmpty(entity.MarcasPecas.DESCRICAO))
+                await connection.ExecuteAsync("UPDATE MARCAS_PECAS SET DESCRICAO = @DESCRICAO WHERE ID_MARCA_PECAS = @ID_MARCA_PECAS", new { DESCRICAO = entity.MarcasPecas.DESCRICAO, ID_MARCA_PECAS = entity.MarcasPecas.ID_MARCA_PECAS }, transaction);
+
+            if (entity.MarcasVeiculos.ID_MARCA == 0)
+                entity.MarcasVeiculos.ID_MARCA = await Create(entity.MarcasVeiculos, connection, transaction);
+            else if(!string.IsNullOrEmpty(entity.MarcasVeiculos.DESCRICAO))
+                await connection.ExecuteAsync("UPDATE MARCAS_VEICULOS SET DESCRICAO = @DESCRICAO WHERE ID_MARCA = @ID_MARCA", new { DESCRICAO = entity.MarcasVeiculos.DESCRICAO, ID_MARCA = entity.MarcasVeiculos.ID_MARCA }, transaction);
 
             if (entity.ID_PRECO_PECA == 0)
-                return await connection.InsertAsync(entity, transaction: transaction, commandTimeout: 900);
+                entity.ID_PRECO_PECA = await connection.InsertAsync(entity, transaction: transaction, commandTimeout: 900);
             else
                 await connection.UpdateAsync(entity, transaction: transaction, commandTimeout: 900);
 
+            await CreateModelosVeiculosPecas(entity.ModelosVeiculos, entity.MarcasVeiculos.ID_MARCA, entity.ID_PRECO_PECA, connection, transaction);
+
             return entity.ID_PRECO_PECA;
         }
+
+        private async Task CreateModelosVeiculosPecas(List<ModelosVeiculosPecasEntity> modelosVeiculos, int idMarca, int idPrecoPeca, SqlConnection connection, SqlTransaction transaction)
+        {
+            foreach (var item in modelosVeiculos)
+            {
+                if(item.REMOVER)
+                    await connection.DeleteAsync(item, transaction: transaction, commandTimeout: 900);
+                else
+                {
+                    if(item.ID_MODELO == 0)
+                    {
+                        item.modelosVeiculos.ID_MARCA = idMarca;
+                        item.ID_MODELO = await Create(item.modelosVeiculos, connection, transaction);
+                    }
+                    else
+                        await connection.ExecuteAsync("UPDATE MODELOS_VEICULOS SET DESCRICAO = @DESCRICAO WHERE ID_MODELO = @ID_MODELO", new { DESCRICAO = item.modelosVeiculos.DESCRICAO, ID_MODELO = item.modelosVeiculos.ID_MODELO }, transaction);
+
+                    if (item.ID_MOD_VEIC_PECAS == 0)
+                    {
+                        item.ID_PRECO_PECA = idPrecoPeca;
+                        await connection.InsertAsync(item, transaction: transaction, commandTimeout: 900);
+                    }
+                }
+            }
+        }
+
         private async Task CrudHistoricoPrecosPecas(List<HistoricosPrecoPecasEntity> hisEntity, int idPrecoPeca, SqlConnection connection, SqlTransaction transaction)
         {
             foreach (var entity in hisEntity)
             {
-                var idEstoque = await CrudEstoquePecas(entity.EstoquePecas, idPrecoPeca, connection, transaction);
+                entity.ID_ESTOQUE_PECAS = await CrudEstoquePecas(entity.EstoquePecas, idPrecoPeca, connection, transaction);
 
                 if(entity.ID_FORNECEDOR == 0)
                     entity.ID_FORNECEDOR = await Create(entity.Fornecedores, connection, transaction);
 
                 if (entity.ID_HIST_PRECO_PECA == 0)
                 {
-                    if (idEstoque > 0)
-                        entity.ID_ESTOQUE_PECAS = idEstoque;
-
                     entity.ID_PRECO_PECA = idPrecoPeca;
                     await connection.InsertAsync(entity, transaction: transaction, commandTimeout: 900);
                 }
@@ -128,7 +159,7 @@ namespace RSauto.Infrastructure.Repositories.Registers
                 }
             }
         }
-        private async Task<int> CrudEstoquePecas(EstoquePecasEntity entity, int idPrecoPeca, SqlConnection connection, SqlTransaction transaction)
+        private async Task<int?> CrudEstoquePecas(EstoquePecasEntity entity, int idPrecoPeca, SqlConnection connection, SqlTransaction transaction)
         {
             if (entity.ID_ESTOQUE_PECAS == 0)
             {                
@@ -139,7 +170,7 @@ namespace RSauto.Infrastructure.Repositories.Registers
             else
                 await connection.UpdateAsync(entity, transaction: transaction, commandTimeout: 900);
 
-            return 0;
+            return null;
         }
         private async Task CrudListaAnoModeloPreco(List<ListaAnoModeloPrecoEntity> listaAnoModeloPreco, int idPrecoPeca, SqlConnection connection, SqlTransaction transaction)
         {
@@ -149,9 +180,14 @@ namespace RSauto.Infrastructure.Repositories.Registers
                     await connection.DeleteAsync(item, transaction: transaction, commandTimeout: 900);
                 else
                 {
-                    if(item.ID_PRECO_PECA == 0)
+                    if(item.AnoModeloVeiculo.ID_ANO_MOD_VEIC == 0)
+                        item.ID_ANO_MOD_VEIC = await Create(item.AnoModeloVeiculo, connection, transaction);
+                    else
+                       await connection.ExecuteAsync("UPDATE ANO_MODELO_VEICULO SET DESCRICAO = @DESCRICAO WHERE ID_ANO_MOD_VEIC = @ID_ANO_MOD_VEIC", new { DESCRICAO = item.AnoModeloVeiculo.DESCRICAO, ID_MODELO = item.AnoModeloVeiculo.ID_ANO_MOD_VEIC }, transaction);
+
+                    if (item.ID_ANO_MOD_PRECO == 0)
                     {
-                        item.ID_PRECO_PECA = idPrecoPeca;
+                        item.ID_PRECO_PECA = idPrecoPeca;                        
                         await connection.InsertAsync(item, transaction: transaction, commandTimeout: 900);
                     }                    
                 }

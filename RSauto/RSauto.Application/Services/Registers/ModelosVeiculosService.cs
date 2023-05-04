@@ -29,10 +29,10 @@ namespace RSauto.Application.Services.Cadastros
             if (!retorno.IsValid)
                 return new CommandResult(false, "Atenção", ReturnErrors.CreateObjetError(retorno.Errors));
 
-            if (await _modelosVeiculosRepository.PossuiModeloVeiculo(input.NOME, input.ID_MARCA))
+            if (await _modelosVeiculosRepository.PossuiModeloVeiculo(input.DESCRICAO, input.ID_MARCA))
                 return new CommandResult(false, "Já possui uma marca com a descrição informada");
 
-            await _baseCrudRepository.Update(new ModelosVeiculosEntity { ID_MODELO = id, DESCRICAO = input.NOME, ID_MARCA = input.ID_MARCA  });
+            await _baseCrudRepository.Update(new ModelosVeiculosEntity { ID_MODELO = id, DESCRICAO = input.DESCRICAO, ID_MARCA = input.ID_MARCA  });
             return new CommandResult(true, "Cadastro atualizado com sucesso.");
         }
 
@@ -42,10 +42,10 @@ namespace RSauto.Application.Services.Cadastros
             if (!retorno.IsValid)
                 return new CommandResult(false, "Atenção", ReturnErrors.CreateObjetError(retorno.Errors));
 
-            if (await _modelosVeiculosRepository.PossuiModeloVeiculo(input.NOME, input.ID_MARCA))
+            if (await _modelosVeiculosRepository.PossuiModeloVeiculo(input.DESCRICAO, input.ID_MARCA))
                 return new CommandResult(false, "Já possui um modelo com a descrição informada");
 
-            await _baseCrudRepository.Create(new ModelosVeiculosEntity { DESCRICAO = input.NOME, ID_MARCA = input.ID_MARCA });
+            await _baseCrudRepository.Create(new ModelosVeiculosEntity { DESCRICAO = input.DESCRICAO, ID_MARCA = input.ID_MARCA });
             return new CommandResult(true, "Cadastro realizado com sucesso.");
         }
 

@@ -11,5 +11,7 @@ namespace RSauto.Domain.Entities
         public int ID_ANO_MOD_VEIC { get; set; }
         [Write(false)]
         public bool REMOVER { get; set; }
+        [Write(false)]
+        public AnoModeloVeiculoEntity AnoModeloVeiculo { get; set; }
     }
 }

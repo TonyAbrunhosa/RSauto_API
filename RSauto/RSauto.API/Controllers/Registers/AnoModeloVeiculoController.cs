@@ -8,8 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RSauto.API.Controllers.Registers
-{    
-    [Authorize(AuthenticationSchemes = "Bearer")]
+{   
     public class AnoModeloVeiculoController : BaseApiController
     {
         private readonly IAnoModeloVeiculoService _service;

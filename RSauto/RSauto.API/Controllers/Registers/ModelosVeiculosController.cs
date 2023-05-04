@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RSauto.Domain.Contracts.Command;
 using RSauto.Domain.Contracts.Services.Registers;
@@ -10,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace RSauto.API.Controllers.Registers
 {    
-    [Authorize(AuthenticationSchemes = "Bearer")]
     public class ModelosVeiculosController : BaseApiController
     {
         private readonly IModelosVeiculosService _service;

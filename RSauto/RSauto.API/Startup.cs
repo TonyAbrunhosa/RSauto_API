@@ -27,7 +27,8 @@ namespace RSauto.API
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-            }).AddFluentValidation();
+            });
+            services.AddFluentValidationAutoValidation();
         }
                 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

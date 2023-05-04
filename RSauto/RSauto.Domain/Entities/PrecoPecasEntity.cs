@@ -8,11 +8,10 @@ namespace RSauto.Domain.Entities
     {
         [Key]
         public int ID_PRECO_PECA { get; set; }
-        public int ID_MARCA_PECAS { get; set; }
-        public int ID_MODELO { get; set; }
+        public int ID_MARCA_PECAS { get; set; }        
         public int ID_PECA { get; set; }        
         public bool STATUS { get; set; }
-        public string CODIGO_PECA { get; set; }
+        public string CODIGO_PECA { get; set; }        
         [Write(false)]
         public List<HistoricosPrecoPecasEntity> HistoricoPrecosPecas { get; set; }
         [Write(false)]
@@ -22,7 +21,7 @@ namespace RSauto.Domain.Entities
         [Write(false)]
         public MarcasVeiculosEntity MarcasVeiculos { get; set; }
         [Write(false)]
-        public ModelosVeiculosEntity ModelosVeiculos { get; set; }
+        public List<ModelosVeiculosPecasEntity> ModelosVeiculos { get; set; }
         [Write(false)]
         public MarcasPecasEntity MarcasPecas { get; set; }
     }

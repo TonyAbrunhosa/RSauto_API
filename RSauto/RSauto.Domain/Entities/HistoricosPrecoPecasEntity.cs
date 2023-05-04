@@ -10,7 +10,7 @@ namespace RSauto.Domain.Entities
         public int ID_HIST_PRECO_PECA { get; set; }
         public int ID_FORNECEDOR { get; set; }
         public int ID_PRECO_PECA { get; set; }
-        public int ID_ESTOQUE_PECAS { get; set; }
+        public int? ID_ESTOQUE_PECAS { get; set; }
         public decimal PRECO { get; set; }
         public decimal CUSTO { get; set; }
         public DateTime DATA_PRECO { get; set; }
