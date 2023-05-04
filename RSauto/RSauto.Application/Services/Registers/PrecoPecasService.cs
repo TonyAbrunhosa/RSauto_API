@@ -15,7 +15,12 @@ namespace RSauto.Application.Services.Registers
         {
             _repository = repository;
         }
+        public async Task<CommandResult> GetPrecoPeca(string filtro, int pagina, int qtdPorPagina)
+        {
+            var consulta = await _repository.GetPrecoPeca(filtro, pagina, qtdPorPagina);
 
+            return new CommandResult(true, "Consulta realizado com sucesso.", consulta);
+        }
         public async Task<CommandResult> UpdateStatus(int idPrecoPeca, bool status)
         {
             if(await _repository.UpdateStatus(idPrecoPeca, status))

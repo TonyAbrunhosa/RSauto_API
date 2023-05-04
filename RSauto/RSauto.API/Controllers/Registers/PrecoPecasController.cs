@@ -50,14 +50,14 @@ namespace RSauto.API.Controllers.Registers
                 return BadRequest(retorno);
         }
 
-        [HttpPut("UpdateStatus/{id:int}")]
+        [HttpGet]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateStatus(int id, [FromBody] bool status)
-        {
-            ICommandResult retorno = await _service.UpdateStatus(id, status);
+        [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]        
+        public async Task<IActionResult> Get([FromQuery] GetListaPrecoPeca input)
+        {        
+            ICommandResult retorno = await _service.GetPrecoPeca(input.Filtro, input.Pagina, input.QtdPorPagina);
 
             if (retorno.Sucesso)
                 return Ok(retorno);
@@ -66,5 +66,22 @@ namespace RSauto.API.Controllers.Registers
             else
                 return BadRequest(retorno);
         }
+
+        //[HttpPut("UpdateStatus/{id:int}")]
+        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status200OK)]
+        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
+        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
+        //public async Task<IActionResult> UpdateStatus(int id, [FromBody] bool status)
+        //{
+        //    ICommandResult retorno = await _service.UpdateStatus(id, status);
+
+        //    if (retorno.Sucesso)
+        //        return Ok(retorno);
+        //    else if (!retorno.Sucesso && retorno.Dados != null)
+        //        return UnprocessableEntity(retorno);
+        //    else
+        //        return BadRequest(retorno);
+        //}
     }
 }

@@ -24,6 +24,47 @@ namespace RSauto.Infrastructure.Repositories.Registers
             _logger = logger;
         }
 
+        public async Task<IEnumerable<PrecoPecasEntity>> GetPrecoPeca(string filtro, int pagina, int qtdPorPagina)
+        {
+            return await _sql.QueryAsyncDapper<PrecoPecasEntity>(@"
+            BEGIN
+	            SELECT 
+		            PP.ID_PRECO_PECA,
+		            PP.CODIGO_PECA,
+		            P.ID_PECA,
+		            P.DESCRICAO,
+		            MP.ID_MARCA_PECAS,
+		            MP.DESCRICAO,
+		            MVP.ID_MOD_VEIC_PECAS,
+		            MV.ID_MARCA,
+		            MV.ID_MODELO,
+		            MV.DESCRICAO,
+		            LAMP.ID_ANO_MOD_PRECO,
+		            AMV.ID_ANO_MOD_VEIC,
+		            AMV.DESCRICAO,
+		            HPP.ID_HIST_PRECO_PECA,
+		            HPP.CUSTO,
+		            HPP.PRECO,
+		            EP.ID_ESTOQUE_PECAS,
+		            EP.LOTE,
+		            EP.QTDE_ESTOQUE
+	            FROM PRECO_PECAS PP WITH(NOLOCK)
+	            INNER JOIN PECAS P WITH(NOLOCK) ON P.ID_PECA = PP.ID_PECA
+	            INNER JOIN MARCAS_PECAS MP WITH(NOLOCK) ON MP.ID_MARCA_PECAS = PP.ID_MARCA_PECAS
+	            INNER JOIN MODELOS_VEICULOS_PECAS MVP WITH(NOLOCK) ON MVP.ID_PRECO_PECA = PP.ID_PRECO_PECA
+	            INNER JOIN MODELOS_VEICULOS MV WITH(NOLOCK) ON MVP.ID_MODELO = MV.ID_MODELO
+	            INNER JOIN LISTA_ANO_MODELO_PRECO LAMP WITH(NOLOCK) ON LAMP.ID_PRECO_PECA = PP.ID_PRECO_PECA
+	            INNER JOIN ANO_MODELO_VEICULO AMV WITH(NOLOCK) ON AMV.ID_ANO_MOD_VEIC = LAMP.ID_ANO_MOD_VEIC
+	            LEFT JOIN HISTORICOS_PRECO_PECAS HPP WITH(NOLOCK) ON HPP.ID_PRECO_PECA = PP.ID_PRECO_PECA AND HPP.STATUS = 0
+	            LEFT JOIN ESTOQUE_PECAS EP WITH(NOLOCK) ON HPP.ID_ESTOQUE_PECAS = EP.ID_ESTOQUE_PECAS
+	            WHERE (@FILTRO = '' OR PP.CODIGO_PECA LIKE '%'+@FILTRO+'%') OR  
+		            (@FILTRO = '' OR  P.DESCRICAO LIKE '%'+@FILTRO+'%')
+	            ORDER BY P.DESCRICAO
+	            OFFSET (@PAGINA - 1) * @QTD_POR_PAGINA ROWS
+	            FETCH NEXT @QTD_POR_PAGINA ROWS ONLY;
+            END", new { @FILTRO = filtro, @PAGINA = pagina , @QTD_POR_PAGINA = qtdPorPagina} );
+        }
+
         public async Task<bool> UpdateStatus(int idPrecoPeca, bool status)
         {
             return await _sql.ExcuteAsyncDapper("BEGIN UPDATE PRECO_PECAS SET STATUS = @Status WHERE ID_PRECO_PECA = @IdPrecoPeca END", new { IdPrecoPeca = idPrecoPeca, Status = status }) > 0;
