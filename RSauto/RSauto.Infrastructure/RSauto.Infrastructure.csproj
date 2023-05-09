@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Slapper.AutoMapper" Version="2.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RSauto.Domain\RSauto.Domain.csproj" />
   </ItemGroup>
 

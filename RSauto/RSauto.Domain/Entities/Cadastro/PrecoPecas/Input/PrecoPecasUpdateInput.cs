@@ -30,15 +30,9 @@ namespace RSauto.Domain.Entities.Cadastro.PrecoPecas.Input
             public int ID_FORNECEDOR { get; set; }
             public string DESC_FORNECEDOR { get; set; }
             public bool STATUS { get; set; }
-            public EstoquePecasUpdateInput EstoquePecas { get; set; }
-        }
-
-        public class EstoquePecasUpdateInput
-        {
-            public int ID_ESTOQUE_PECAS { get; set; }
-            public int QTDE_ESTOQUE { get; set; }            
-            public string LOTE { get; set; }
-        }
+            public int QTDE_ESTOQUE { get; set; }
+            public string LOTE { get; set; }            
+        }        
 
         public class ListaAnoModeloPrecoUpdateInput
         {

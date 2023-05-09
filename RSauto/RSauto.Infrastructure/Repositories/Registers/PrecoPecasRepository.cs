@@ -1,15 +1,19 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RSauto.Domain.Contracts.Repositories.Registers;
 using RSauto.Domain.Entities;
+using RSauto.Domain.Entities.Cadastro.PrecoPecas.Input;
 using RSauto.Shared.Communication;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using static Dapper.SqlMapper;
-using System.Transactions;
+using static RSauto.Domain.Entities.Cadastro.PrecoPecas.Input.PrecoPecaInput;
+using static RSauto.Domain.Entities.Cadastro.PrecoPecas.Input.PrecoPecaInput.VeiculoInput;
+using static Slapper.AutoMapper;
 
 namespace RSauto.Infrastructure.Repositories.Registers
 {
@@ -24,45 +28,59 @@ namespace RSauto.Infrastructure.Repositories.Registers
             _logger = logger;
         }
 
-        public async Task<IEnumerable<PrecoPecasEntity>> GetPrecoPeca(string filtro, int pagina, int qtdPorPagina)
+        public async Task<IEnumerable<PrecoPecaInput>> GetPrecoPeca(string filtro, int pagina, int qtdPorPagina)
         {
-            return await _sql.QueryAsyncDapper<PrecoPecasEntity>(@"
+            var dados = await _sql.QueryAsyncDapper<dynamic>(@"
             BEGIN
 	            SELECT 
-		            PP.ID_PRECO_PECA,
-		            PP.CODIGO_PECA,
-		            P.ID_PECA,
-		            P.DESCRICAO,
-		            MP.ID_MARCA_PECAS,
-		            MP.DESCRICAO,
-		            MVP.ID_MOD_VEIC_PECAS,
-		            MV.ID_MARCA,
-		            MV.ID_MODELO,
-		            MV.DESCRICAO,
-		            LAMP.ID_ANO_MOD_PRECO,
-		            AMV.ID_ANO_MOD_VEIC,
-		            AMV.DESCRICAO,
-		            HPP.ID_HIST_PRECO_PECA,
-		            HPP.CUSTO,
-		            HPP.PRECO,
-		            EP.ID_ESTOQUE_PECAS,
-		            EP.LOTE,
-		            EP.QTDE_ESTOQUE
+		            PP.ID_PRECO_PECA [IdPecoPeca],
+		            P.ID_PECA [Id],
+		            P.DESCRICAO [Descricao],
+		            MP.ID_MARCA_PECAS [IdMarca],
+		            MP.DESCRICAO [Marca],
+		            PP.CODIGO_PECA [Codigo],
+
+		            MV.ID_MARCA [Veiculo_Marca_Id],
+                    MV.DESCRICAO [Veiculo_Marca_Descricao],
+                    
+		            MVP.ID_MOD_VEIC_PECAS [Veiculo_Modelos_IdModVeicPeca],
+		            MV.ID_MODELO [Veiculo_Modelos_Id],
+		            MV.DESCRICAO [Veiculo_Modelos_Descricao],
+
+		            HPP.ID_HIST_PRECO_PECA [Fornecedores_IdHistPrecoPeca],
+                    F.ID_FORNECEDOR [Fornecedores_Id],
+                    F.DESCRICAO [Fornecedores_Descricao],
+		            HPP.CUSTO [Fornecedores_Custo],
+		            HPP.PRECO [Fornecedores_Preco],
+		            HPP.LOTE [Fornecedores_Lote],
+		            HPP.QTDE_ESTOQUE [Fornecedores_Estoque],
+
+		            LAMP.ID_ANO_MOD_PRECO [AnoModelos_IdAnoModPreco],
+		            AMV.ID_ANO_MOD_VEIC [AnoModelos_Id],
+		            AMV.DESCRICAO [AnoModelos_Descricao]
+
 	            FROM PRECO_PECAS PP WITH(NOLOCK)
 	            INNER JOIN PECAS P WITH(NOLOCK) ON P.ID_PECA = PP.ID_PECA
 	            INNER JOIN MARCAS_PECAS MP WITH(NOLOCK) ON MP.ID_MARCA_PECAS = PP.ID_MARCA_PECAS
 	            INNER JOIN MODELOS_VEICULOS_PECAS MVP WITH(NOLOCK) ON MVP.ID_PRECO_PECA = PP.ID_PRECO_PECA
 	            INNER JOIN MODELOS_VEICULOS MV WITH(NOLOCK) ON MVP.ID_MODELO = MV.ID_MODELO
 	            INNER JOIN LISTA_ANO_MODELO_PRECO LAMP WITH(NOLOCK) ON LAMP.ID_PRECO_PECA = PP.ID_PRECO_PECA
-	            INNER JOIN ANO_MODELO_VEICULO AMV WITH(NOLOCK) ON AMV.ID_ANO_MOD_VEIC = LAMP.ID_ANO_MOD_VEIC
-	            LEFT JOIN HISTORICOS_PRECO_PECAS HPP WITH(NOLOCK) ON HPP.ID_PRECO_PECA = PP.ID_PRECO_PECA AND HPP.STATUS = 0
-	            LEFT JOIN ESTOQUE_PECAS EP WITH(NOLOCK) ON HPP.ID_ESTOQUE_PECAS = EP.ID_ESTOQUE_PECAS
+	            INNER JOIN ANO_MODELO_VEICULO AMV WITH(NOLOCK) ON AMV.ID_ANO_MOD_VEIC = LAMP.ID_ANO_MOD_VEIC                
+	            INNER JOIN HISTORICOS_PRECO_PECAS HPP WITH(NOLOCK) ON HPP.ID_PRECO_PECA = PP.ID_PRECO_PECA AND HPP.STATUS = 0
+                INNER JOIN FORNECEDORES F WITH(NOLOCK) ON HPP.ID_FORNECEDOR = F.ID_FORNECEDOR
 	            WHERE (@FILTRO = '' OR PP.CODIGO_PECA LIKE '%'+@FILTRO+'%') OR  
 		            (@FILTRO = '' OR  P.DESCRICAO LIKE '%'+@FILTRO+'%')
 	            ORDER BY P.DESCRICAO
 	            OFFSET (@PAGINA - 1) * @QTD_POR_PAGINA ROWS
 	            FETCH NEXT @QTD_POR_PAGINA ROWS ONLY;
             END", new { @FILTRO = filtro, @PAGINA = pagina , @QTD_POR_PAGINA = qtdPorPagina} );
+
+            Configuration.AddIdentifier(typeof(MarcaInput), "Id");
+            Configuration.AddIdentifier(typeof(ModelosInput), "IdModVeicPeca");
+            Configuration.AddIdentifier(typeof(FornecedoresInput), "IdHistPrecoPeca");
+            Configuration.AddIdentifier(typeof(AnoModelosInput), "IdAnoModPreco");
+
+            return MapDynamic<PrecoPecaInput>(dados);
         }
 
         public async Task<bool> UpdateStatus(int idPrecoPeca, bool status)
@@ -183,8 +201,6 @@ namespace RSauto.Infrastructure.Repositories.Registers
         {
             foreach (var entity in hisEntity)
             {
-                entity.ID_ESTOQUE_PECAS = await CrudEstoquePecas(entity.EstoquePecas, idPrecoPeca, connection, transaction);
-
                 if(entity.ID_FORNECEDOR == 0)
                     entity.ID_FORNECEDOR = await Create(entity.Fornecedores, connection, transaction);
 

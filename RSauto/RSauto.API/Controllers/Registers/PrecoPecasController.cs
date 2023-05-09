@@ -21,7 +21,7 @@ namespace RSauto.API.Controllers.Registers
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create([FromBody] PrecoPecasCreateInput input)
+        public async Task<IActionResult> Create([FromBody] PrecoPecaInput input)
         {
             ICommandResult retorno = await _service.Create(input);
 
@@ -31,6 +31,8 @@ namespace RSauto.API.Controllers.Registers
                 return UnprocessableEntity(retorno);
             else
                 return BadRequest(retorno);
+
+            return null;
         }
 
         [HttpPut("Update/{id:int}")]
@@ -38,7 +40,7 @@ namespace RSauto.API.Controllers.Registers
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(int id, [FromBody] PrecoPecasUpdateInput input)
+        public async Task<IActionResult> Update(int id, [FromBody] PrecoPecaInput input)
         {
             ICommandResult retorno = await _service.Update(id, input);
 
@@ -48,6 +50,8 @@ namespace RSauto.API.Controllers.Registers
                 return UnprocessableEntity(retorno);
             else
                 return BadRequest(retorno);
+
+            return null;
         }
 
         [HttpGet]

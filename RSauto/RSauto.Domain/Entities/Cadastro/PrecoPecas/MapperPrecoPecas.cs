@@ -6,138 +6,74 @@ namespace RSauto.Domain.Entities.Cadastro.PrecoPecas
 {
     public static class MapperPrecoPecas
     {
-        public static PrecoPecasEntity PrecoPecasCreateEntity(this PrecoPecasCreateInput input)
+        public static PrecoPecasEntity PrecoPecasEntity(this PrecoPecaInput input, int id = 0)
         {
             return new PrecoPecasEntity
             {
-                ID_MARCA_PECAS = input.ID_MARCA_PECAS,
-                ID_PECA = input.ID_PECA,
+                ID_PRECO_PECA = id,
+                ID_MARCA_PECAS = input.IdMarca,
+                ID_PECA = input.Id,
                 STATUS = true,
-                CODIGO_PECA = input.CODIGO_PECA,
-                HistoricoPrecosPecas = SetHistoricoPrecosPecasCreate(input.HistoricoPrecosPecas),
-                ListaAnoModeloPreco = SetListAnoModeloPrecoCreate(input.ListaAnoModeloPreco),
-                Pecas = new PecasEntity { ID_PECA = input.ID_PECA, DESCRICAO = input.DESC_PECA },
-                MarcasPecas = new MarcasPecasEntity { ID_MARCA_PECAS = input.ID_MARCA_PECAS, DESCRICAO = input.DESC_MARCA_PECAS },
-                MarcasVeiculos = new MarcasVeiculosEntity { ID_MARCA = input.ID_MARCA, DESCRICAO = input.DESC_MARCA },
-                ModelosVeiculos = SetModelosVeiculosCreate(input.Modelosveiculos)
+                CODIGO_PECA = input.Codigo,
+                HistoricoPrecosPecas = SetHistoricoPrecosPecas(input.Fornecedores),
+                ListaAnoModeloPreco = SetListAnoModeloPreco(input.AnoModelos),
+                Pecas = new PecasEntity { ID_PECA = input.Id, DESCRICAO = input.Descricao},
+                MarcasPecas = new MarcasPecasEntity { ID_MARCA_PECAS = input.IdMarca, DESCRICAO = input.Marca },
+                MarcasVeiculos = new MarcasVeiculosEntity { ID_MARCA = input.Veiculo.Marca.Id, DESCRICAO = input.Veiculo.Marca.Descricao },
+                ModelosVeiculos = SetModelosVeiculos(input.Veiculo.Modelos)
             };
-        }        
+        }          
 
-        public static PrecoPecasEntity PrecoPecasUpdateEntity(this PrecoPecasUpdateInput input, int id)
-        {
-            return new PrecoPecasEntity
-            {
-                ID_PRECO_PECA= id,
-                ID_MARCA_PECAS = input.ID_MARCA_PECAS,                
-                ID_PECA = input.ID_PECA,
-                STATUS = input.STATUS,
-                CODIGO_PECA = input.CODIGO_PECA,
-                HistoricoPrecosPecas = SetHistoricoPrecosPecasUpdate(input.HistoricoPrecosPecas),
-                ListaAnoModeloPreco = SetListAnoModeloPrecoUpdate(input.ListaAnoModeloPreco),
-                Pecas = new PecasEntity { ID_PECA = input.ID_PECA, DESCRICAO = input.DESC_PECA },
-                MarcasVeiculos = new MarcasVeiculosEntity { ID_MARCA = input.ID_MARCA, DESCRICAO = input.DESC_MARCA },
-                ModelosVeiculos = SetModelosVeiculosUpdate(input.Modelosveiculos)
-            };
-        }        
-
-        private static List<ListaAnoModeloPrecoEntity> SetListAnoModeloPrecoCreate(IEnumerable<PrecoPecasCreateInput.ListaAnoModeloPrecoCreateinput> listaAnoModeloPreco)
+        private static List<ListaAnoModeloPrecoEntity> SetListAnoModeloPreco(IEnumerable<PrecoPecaInput.AnoModelosInput> anoModelosinput)
         {
             List<ListaAnoModeloPrecoEntity> entities = new List<ListaAnoModeloPrecoEntity>();
 
-            foreach (var item in listaAnoModeloPreco)
-                entities.Add(new ListaAnoModeloPrecoEntity { ID_ANO_MOD_VEIC = item.ID_ANO_MOD_VEIC, AnoModeloVeiculo = new AnoModeloVeiculoEntity { DESCRICAO = item.DESCRICAO, ID_ANO_MOD_VEIC = item.ID_ANO_MOD_VEIC } });
-
-            return entities;
-        }
-
-        private static List<ListaAnoModeloPrecoEntity> SetListAnoModeloPrecoUpdate(IEnumerable<PrecoPecasUpdateInput.ListaAnoModeloPrecoUpdateInput> listaAnoModeloPreco)
-        {
-            List<ListaAnoModeloPrecoEntity> entities = new List<ListaAnoModeloPrecoEntity>();
-
-            foreach (var item in listaAnoModeloPreco)
+            foreach (var item in anoModelosinput)
                 entities.Add(new ListaAnoModeloPrecoEntity { 
-                    ID_ANO_MOD_VEIC = item.ID_ANO_MOD_VEIC, 
-                    REMOVER = item.REMOVER, 
-                    ID_ANO_MOD_PRECO = item.ID_ANO_MOD_PRECO,
-                    AnoModeloVeiculo = new AnoModeloVeiculoEntity { DESCRICAO = item.DESCRICAO, ID_ANO_MOD_VEIC = item.ID_ANO_MOD_VEIC }
+                    ID_ANO_MOD_VEIC = item.Id, 
+                    REMOVER = item.Remover, 
+                    ID_ANO_MOD_PRECO = item.IdAnoModPreco,
+                    AnoModeloVeiculo = new AnoModeloVeiculoEntity { DESCRICAO = item.Descricao, ID_ANO_MOD_VEIC = item.Id}
                 });
 
             return entities;
         }
-        private static List<HistoricosPrecoPecasEntity> SetHistoricoPrecosPecasUpdate(IEnumerable<PrecoPecasUpdateInput.HistoricosPrecoPecasUpdateInput> historicoPrecosPecas)
+
+        private static List<HistoricosPrecoPecasEntity> SetHistoricoPrecosPecas(IEnumerable<PrecoPecaInput.FornecedoresInput> fornInput)
         {
             List<HistoricosPrecoPecasEntity> entites = new List<HistoricosPrecoPecasEntity>();
 
-            foreach (var item in historicoPrecosPecas)
+            foreach (var item in fornInput)
                 entites.Add(new HistoricosPrecoPecasEntity
                 {
-                    ID_FORNECEDOR = item.ID_FORNECEDOR,
-                    ID_HIST_PRECO_PECA = item.ID_HIST_PRECO_PECA,
-                    STATUS = item.STATUS,
-                    EstoquePecas = new EstoquePecasEntity
-                    {
-                        ID_ESTOQUE_PECAS = item.ID_HIST_PRECO_PECA,
-                        QTDE_ESTOQUE = item.EstoquePecas.QTDE_ESTOQUE,
-                        LOTE = item.EstoquePecas.LOTE,
-                    },
-                    Fornecedores = new FornecedoresEntity { ID_FORNECEDOR = item.ID_FORNECEDOR, DESCRICAO = item.DESC_FORNECEDOR }
-                });
-
-            return entites;
-        }
-
-        private static List<HistoricosPrecoPecasEntity> SetHistoricoPrecosPecasCreate(IEnumerable<PrecoPecasCreateInput.HistoricosPrecoPecasCreateInput> historicoPrecosPecas)
-        {
-            List<HistoricosPrecoPecasEntity> entites = new List<HistoricosPrecoPecasEntity>();
-
-            foreach (var item in historicoPrecosPecas)
-                entites.Add(new HistoricosPrecoPecasEntity
-                {
-                    ID_FORNECEDOR = item.ID_FORNECEDOR,
-                    PRECO = item.PRECO,
-                    CUSTO = item.CUSTO,
+                    ID_HIST_PRECO_PECA = item.IdHistPrecoPeca,
+                    ID_FORNECEDOR = item.Id,
+                    PRECO = item.Preco,
+                    CUSTO = item.Custo,
                     DATA_PRECO = DateTime.Now,
-                    EstoquePecas = new EstoquePecasEntity
-                    {
-                        QTDE_ESTOQUE = item.EstoquePecas.QTDE_ESTOQUE,
-                        LOTE = item.EstoquePecas.LOTE,
-                    },
-                    Fornecedores = new FornecedoresEntity { ID_FORNECEDOR = item.ID_FORNECEDOR, DESCRICAO = item.DESC_FORNECEDOR }
+                    QTDE_ESTOQUE = item.Estoque,
+                    LOTE = item.Lote,
+                    Fornecedores = new FornecedoresEntity { ID_FORNECEDOR = item.Id, DESCRICAO = item.Descricao }
                 });
 
             return entites;
         }
 
-        private static List<ModelosVeiculosPecasEntity> SetModelosVeiculosUpdate(IEnumerable<PrecoPecasUpdateInput.ModelosVeiculosUpdateInput> modelosveiculos)
+        private static List<ModelosVeiculosPecasEntity> SetModelosVeiculos(IEnumerable<PrecoPecaInput.ModelosInput> modelosveiculosInput)
         {
             List<ModelosVeiculosPecasEntity> entities = new List<ModelosVeiculosPecasEntity>();
 
-            foreach (var item in modelosveiculos)
+            foreach (var item in modelosveiculosInput)
             {
                 entities.Add(new ModelosVeiculosPecasEntity
                 {
-                    ID_MODELO = item.ID_MODELO,
-                    modelosVeiculos = new ModelosVeiculosEntity { ID_MODELO = item.ID_MODELO, DESCRICAO = item.DESCRICAO }
+                    ID_MOD_VEIC_PECAS = item.IdModVeicPeca,
+                    ID_MODELO = item.Id,
+                    modelosVeiculos = new ModelosVeiculosEntity { ID_MODELO = item.Id, DESCRICAO = item.Descricao }
                 });
             }
 
             return entities;
-        }
-
-        private static List<ModelosVeiculosPecasEntity> SetModelosVeiculosCreate(IEnumerable<PrecoPecasCreateInput.ModelosVeiculosCreateInput> modelosveiculos)
-        {
-            List<ModelosVeiculosPecasEntity> entities = new List<ModelosVeiculosPecasEntity>();
-
-            foreach (var item in modelosveiculos)
-            {
-                entities.Add(new ModelosVeiculosPecasEntity
-                {
-                    ID_MODELO = item.ID_MODELO,
-                    modelosVeiculos = new ModelosVeiculosEntity { ID_MODELO = item.ID_MODELO, DESCRICAO = item.DESCRICAO }
-                });
-            }
-
-            return entities;
-        }
+        }       
     }
 }

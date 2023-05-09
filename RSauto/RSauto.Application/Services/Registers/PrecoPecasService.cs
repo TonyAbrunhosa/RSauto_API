@@ -29,16 +29,16 @@ namespace RSauto.Application.Services.Registers
             return new CommandResult(false, "Erro ao atualizar o cadastro.");
         }
 
-        public async Task<CommandResult> Create(PrecoPecasCreateInput input)
+        public async Task<CommandResult> Create(PrecoPecaInput input)
         {
-            await _repository.Create(input.PrecoPecasCreateEntity());
+            await _repository.Create(input.PrecoPecasEntity());
 
             return new CommandResult(true, "Cadastro realizado com sucesso.");
         }
 
-        public async Task<CommandResult> Update(int id, PrecoPecasUpdateInput input)
+        public async Task<CommandResult> Update(int id, PrecoPecaInput input)
         {
-            await _repository.Update(input.PrecoPecasUpdateEntity(id));
+            await _repository.Update(input.PrecoPecasEntity(id));
 
             return new CommandResult(true, "Cadastro atualizado com sucesso.");
         }
