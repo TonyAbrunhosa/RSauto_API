@@ -201,9 +201,6 @@ namespace RSauto.Infrastructure.Repositories.Registers
         {
             foreach (var entity in hisEntity)
             {
-                if(entity.ID_FORNECEDOR == 0)
-                    entity.ID_FORNECEDOR = await Create(entity.Fornecedores, connection, transaction);
-
                 if (entity.ID_HIST_PRECO_PECA == 0)
                 {
                     entity.ID_PRECO_PECA = idPrecoPeca;

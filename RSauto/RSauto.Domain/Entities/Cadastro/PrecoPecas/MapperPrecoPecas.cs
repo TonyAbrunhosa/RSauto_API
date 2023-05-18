@@ -52,8 +52,7 @@ namespace RSauto.Domain.Entities.Cadastro.PrecoPecas
                     CUSTO = item.Custo,
                     DATA_PRECO = DateTime.Now,
                     QTDE_ESTOQUE = item.Estoque,
-                    LOTE = item.Lote,
-                    Fornecedores = new FornecedoresEntity { ID_FORNECEDOR = item.Id, DESCRICAO = item.Descricao }
+                    LOTE = item.Lote                    
                 });
 
             return entites;

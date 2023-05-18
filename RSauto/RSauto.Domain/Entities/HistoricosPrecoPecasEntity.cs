@@ -16,8 +16,6 @@ namespace RSauto.Domain.Entities
         public DateTime DATA_PRECO { get; set; }
         public bool STATUS { get; set; }
         public int QTDE_ESTOQUE { get; set; }        
-        public string LOTE { get; set; }
-        [Write(false)]
-        public FornecedoresEntity Fornecedores { get; set; }
+        public string LOTE { get; set; }        
     }
 }

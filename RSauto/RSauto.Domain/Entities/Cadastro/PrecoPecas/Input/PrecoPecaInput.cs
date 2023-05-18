@@ -37,8 +37,7 @@ namespace RSauto.Domain.Entities.Cadastro.PrecoPecas.Input
         public class FornecedoresInput
         {
             public int IdHistPrecoPeca { get; set; }
-            public int Id { get; set; }
-            public string Descricao { get; set; }
+            public int Id { get; set; }            
             public decimal Preco { get; set; }
             public decimal Custo { get; set; }
             public bool Status { get; set; }

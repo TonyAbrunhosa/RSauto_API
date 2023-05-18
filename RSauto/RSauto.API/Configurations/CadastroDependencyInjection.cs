@@ -12,6 +12,8 @@ using FluentValidation.AspNetCore;
 using FluentValidation;
 using RSauto.Domain.Entities.Cadastro.Cilindrada;
 using RSauto.Application.Services.Registers;
+using RSauto.Domain.Entities.Cadastro.Fornecedor;
+using RSauto.Domain.Entities.Cadastro.Cliente;
 
 namespace RSauto.API.Configurations
 {
@@ -26,6 +28,9 @@ namespace RSauto.API.Configurations
             services.AddTransient<IModelosVeiculosService, ModelosVeiculosService>();
             services.AddTransient<ICilindradaVeiculosService, CilindradaVeiculosService>();
             services.AddTransient<IPrecoPecasService, PrecoPecasService>();
+            services.AddTransient<IClienteService, ClienteService>();
+            services.AddTransient<IFornecedorService, FornecedorService>();
+
 
             //REPOSITORY
             services.AddTransient<IBaseCrudRepository, BaseCrudRepository>();
@@ -35,6 +40,8 @@ namespace RSauto.API.Configurations
             services.AddTransient<IModelosVeiculosRepository, ModelosVeiculosRepository>();
             services.AddTransient<ICilindradaVeiculosRepository, CilindradaVeiculosRepository>();
             services.AddTransient<IPrecoPecasRepository, PrecoPecasRepository>();
+            services.AddTransient<IFornecedorRepository, FornecedorRepository>();
+            services.AddTransient<IClienteRepository, ClienteRepository>();
 
             //VALIDATE
             services.AddFluentValidationClientsideAdapters();
@@ -47,6 +54,8 @@ namespace RSauto.API.Configurations
             services.AddValidatorsFromAssemblyContaining<MarcasPecasEditValidate>();
             services.AddValidatorsFromAssemblyContaining<CilindradaEditValidate>();
             services.AddValidatorsFromAssemblyContaining<CilindradaNewValidate>();
+            services.AddValidatorsFromAssemblyContaining<ClienteValidate>();
+            services.AddValidatorsFromAssemblyContaining<FornecedorValidate>();
 
         }
     }
