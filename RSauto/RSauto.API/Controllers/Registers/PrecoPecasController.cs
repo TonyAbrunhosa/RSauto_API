@@ -31,8 +31,6 @@ namespace RSauto.API.Controllers.Registers
                 return UnprocessableEntity(retorno);
             else
                 return BadRequest(retorno);
-
-            return null;
         }
 
         [HttpPut("Update/{id:int}")]
@@ -50,8 +48,6 @@ namespace RSauto.API.Controllers.Registers
                 return UnprocessableEntity(retorno);
             else
                 return BadRequest(retorno);
-
-            return null;
         }
 
         [HttpGet]
@@ -70,22 +66,5 @@ namespace RSauto.API.Controllers.Registers
             else
                 return BadRequest(retorno);
         }
-
-        //[HttpPut("UpdateStatus/{id:int}")]
-        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status200OK)]
-        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
-        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> UpdateStatus(int id, [FromBody] bool status)
-        //{
-        //    ICommandResult retorno = await _service.UpdateStatus(id, status);
-
-        //    if (retorno.Sucesso)
-        //        return Ok(retorno);
-        //    else if (!retorno.Sucesso && retorno.Dados != null)
-        //        return UnprocessableEntity(retorno);
-        //    else
-        //        return BadRequest(retorno);
-        //}
     }
 }

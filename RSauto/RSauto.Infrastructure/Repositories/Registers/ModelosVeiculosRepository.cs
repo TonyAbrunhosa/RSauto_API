@@ -29,7 +29,7 @@ namespace RSauto.Infrastructure.Repositories.Registers
                         TOP 1 
                         ID_MODELO 
                     FROM MODELOS_VEICULOS 
-                    WHERE NOME = @nome 
+                    WHERE DESCRICAO = @nome 
                     AND (@id = 0 OR ID_MARCA != @id)
                 END", new { nome = nome, id = id }))?.Count() ?? 0) > 0;
         }

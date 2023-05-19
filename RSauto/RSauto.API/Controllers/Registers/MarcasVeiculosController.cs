@@ -51,23 +51,6 @@ namespace RSauto.API.Controllers.Registers
                 return BadRequest(retorno);
         }
 
-        //[HttpDelete("Delete/{id:int}")]
-        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status200OK)]
-        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status422UnprocessableEntity)]
-        //[ProducesResponseType(typeof(ICommandResult), StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> Remove(int id)
-        //{
-        //    ICommandResult retorno = await _service.Remove(id);
-
-        //    if (retorno.Sucesso)
-        //        return Ok(retorno);
-        //    else if (!retorno.Sucesso && retorno.Dados != null)
-        //        return UnprocessableEntity(retorno);
-        //    else
-        //        return BadRequest(retorno);
-        //}
-
         [HttpGet("Listar")]
         [ProducesResponseType(typeof(IEnumerable<MarcasVeiculosEntity>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ICommandResult), StatusCodes.Status400BadRequest)]

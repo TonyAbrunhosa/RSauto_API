@@ -1,4 +1,5 @@
 ﻿using Dapper.Contrib.Extensions;
+using System.Collections.Generic;
 
 namespace RSauto.Domain.Entities
 {
@@ -8,5 +9,8 @@ namespace RSauto.Domain.Entities
         [Key]
         public int ID_MARCA { get; set; }
         public string DESCRICAO { get; set; }
+
+        [Write(false)]
+        public IEnumerable<ModelosVeiculosEntity> MODELOS { get; set; }
     }
 }
